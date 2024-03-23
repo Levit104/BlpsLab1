@@ -19,6 +19,6 @@ public class City {
     @JoinColumn(name = "country_id", referencedColumnName = "id", nullable = false)
     private Country country;
 
-    @ManyToMany(mappedBy = "cities")
+    @OneToMany(mappedBy = "city")
     private List<Tour> tours;
 }
