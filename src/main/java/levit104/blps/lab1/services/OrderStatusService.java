@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderStatusService {
     private final OrderStatusRepository orderStatusRepository;
 
-    public OrderStatus getByName(String name) {
-        return orderStatusRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Ошибка при создании заказа"));
+    public OrderStatus getByName(String name) throws EntityNotFoundException {
+        return orderStatusRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException(
+                "Ошибка при создании заказа: статус %s не найден".formatted(name)
+        ));
     }
 }

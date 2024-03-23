@@ -3,12 +3,14 @@ package levit104.blps.lab1.controllers;
 import jakarta.validation.Valid;
 import levit104.blps.lab1.dto.OrderCreationDTO;
 import levit104.blps.lab1.dto.OrderResponseDTO;
+import levit104.blps.lab1.exceptions.EntityNotFoundException;
 import levit104.blps.lab1.models.Order;
 import levit104.blps.lab1.models.Tour;
 import levit104.blps.lab1.models.User;
 import levit104.blps.lab1.services.OrderService;
 import levit104.blps.lab1.services.TourService;
 import levit104.blps.lab1.services.UserService;
+import levit104.blps.lab1.validation.OrderValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -16,11 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
 
-import static levit104.blps.lab1.validation.ErrorsUtils.returnErrors;
+import static levit104.blps.lab1.validation.ErrorsUtils.collectErrors;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class ClientOrderController {
     private final OrderService orderService;
     private final UserService userService;
     private final TourService tourService;
+    private final OrderValidator orderValidator;
 
     // Заказы клиента
     @PreAuthorize("hasRole('USER')")
@@ -36,10 +40,9 @@ public class ClientOrderController {
     public ResponseEntity<?> showOrders(@PathVariable String username,
                                         Principal principal) {
         if (!principal.getName().equals(username))
-            return new ResponseEntity<>("Нет доступа", HttpStatus.FORBIDDEN); // TODO исключение/объект ошибки?
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет доступа к чужой странице");
 
         List<Order> orders = orderService.findAllByClientUsername(username);
-
         List<OrderResponseDTO> responseDTO = orders.stream().map(order -> modelMapper.map(order, OrderResponseDTO.class)).toList();
         return ResponseEntity.ok(responseDTO);
     }
@@ -51,12 +54,15 @@ public class ClientOrderController {
                                            @PathVariable Long id,
                                            Principal principal) {
         if (!principal.getName().equals(username))
-            return new ResponseEntity<>("Нет доступа", HttpStatus.FORBIDDEN); // TODO исключение/объект ошибки?
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет доступа к чужой странице");
 
-        Order order = orderService.getByIdAndClientUsername(id, username);
-
-        OrderResponseDTO responseDTO = modelMapper.map(order, OrderResponseDTO.class);
-        return ResponseEntity.ok(responseDTO);
+        try {
+            Order order = orderService.getByIdAndClientUsername(id, username);
+            OrderResponseDTO responseDTO = modelMapper.map(order, OrderResponseDTO.class);
+            return ResponseEntity.ok(responseDTO);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     // TODO POST: /users/orders
@@ -70,14 +76,18 @@ public class ClientOrderController {
                                          Principal principal) {
         Order order = modelMapper.map(requestDTO, Order.class);
 
+        orderValidator.validate(order, bindingResult);
         if (bindingResult.hasErrors())
-            return ResponseEntity.badRequest().body(returnErrors(bindingResult));
+            return ResponseEntity.badRequest().body(collectErrors(bindingResult));
 
-        User client = userService.getByUsername(principal.getName());
-        Tour tour = tourService.getByIdAndGuideUsername(id, username);
-        orderService.createOrder(order, client, tour);
-
-        OrderResponseDTO responseDTO = modelMapper.map(order, OrderResponseDTO.class);
-        return ResponseEntity.ok(responseDTO);
+        try {
+            User client = userService.getByUsername(principal.getName());  // TODO orderService.createOrder???
+            Tour tour = tourService.getByIdAndGuideUsername(id, username);
+            orderService.createOrder(order, client, tour);
+            OrderResponseDTO responseDTO = modelMapper.map(order, OrderResponseDTO.class);
+            return ResponseEntity.ok(responseDTO);
+        } catch (EntityNotFoundException | IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 }

@@ -4,10 +4,12 @@ import jakarta.validation.Valid;
 import levit104.blps.lab1.dto.TourCreationDTO;
 import levit104.blps.lab1.dto.TourResponseDTO;
 import levit104.blps.lab1.dto.UserResponseDTO;
+import levit104.blps.lab1.exceptions.EntityNotFoundException;
 import levit104.blps.lab1.models.Tour;
 import levit104.blps.lab1.models.User;
 import levit104.blps.lab1.services.TourService;
 import levit104.blps.lab1.services.UserService;
+import levit104.blps.lab1.validation.ErrorsUtils;
 import levit104.blps.lab1.validation.TourValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,11 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
-
-import static levit104.blps.lab1.validation.ErrorsUtils.returnErrors;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,9 +60,13 @@ public class GuideTourController {
     // Конкретная экскурсия гида
     @GetMapping("/users/{username}/tours/{id}")
     public ResponseEntity<?> showTourInfo(@PathVariable String username, @PathVariable Long id) {
-        Tour tour = tourService.getByIdAndGuideUsername(id, username);
-        TourResponseDTO responseDTO = modelMapper.map(tour, TourResponseDTO.class);
-        return ResponseEntity.ok(responseDTO);
+        try {
+            Tour tour = tourService.getByIdAndGuideUsername(id, username);
+            TourResponseDTO responseDTO = modelMapper.map(tour, TourResponseDTO.class);
+            return ResponseEntity.ok(responseDTO);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     // Добавить экскурсию
@@ -72,18 +77,21 @@ public class GuideTourController {
                                      BindingResult bindingResult,
                                      Principal principal) {
         if (!principal.getName().equals(username))
-            return new ResponseEntity<>("Нет доступа", HttpStatus.FORBIDDEN); // TODO исключение/объект ошибки?
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет доступа к чужой странице");
 
         Tour tour = modelMapper.map(requestDTO, Tour.class);
 
         tourValidator.validate(tour, bindingResult);
         if (bindingResult.hasErrors())
-            return ResponseEntity.badRequest().body(returnErrors(bindingResult));
+            return ResponseEntity.badRequest().body(ErrorsUtils.collectErrors(bindingResult));
 
-        User guide = userService.getByUsername(username);
-        tourService.save(tour, guide);
-
-        TourResponseDTO responseDTO = modelMapper.map(tour, TourResponseDTO.class);
-        return ResponseEntity.ok(responseDTO);
+        try {
+            User guide = userService.getByUsername(username); // TODO tourService.add???
+            tourService.add(tour, guide);
+            TourResponseDTO responseDTO = modelMapper.map(tour, TourResponseDTO.class);
+            return ResponseEntity.ok(responseDTO);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 }

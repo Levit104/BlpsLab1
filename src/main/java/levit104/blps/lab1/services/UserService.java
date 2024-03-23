@@ -1,5 +1,6 @@
 package levit104.blps.lab1.services;
 
+import levit104.blps.lab1.exceptions.EntityNotFoundException;
 import levit104.blps.lab1.models.Role;
 import levit104.blps.lab1.models.User;
 import levit104.blps.lab1.repos.UserRepository;
@@ -49,25 +50,22 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void registerUser(User user) {
+    public void registerUser(User user) throws EntityNotFoundException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(List.of(roleService.getByName("ROLE_USER")));
         userRepository.save(user);
     }
 
     @Transactional
-    public void giveGuideRole(String username) {
+    public void giveGuideRole(String username) throws EntityNotFoundException {
         User user = getByUsername(username);
-
         Role role = roleService.getByName("ROLE_GUIDE");
 
         if (user.getRoles().contains(role))
             return;
 
         user.getRoles().add(role);
-
         userRepository.save(user);
-        System.out.println(user.getRoles());
     }
 
     public List<User> findAllByCityNameAndCountryName(String cityName, String countryName) {

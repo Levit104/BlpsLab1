@@ -20,13 +20,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderStatusService orderStatusService;
 
-    public Order getByIdAndClientUsername(Long id, String clientUsername) {
+    public Order getByIdAndClientUsername(Long id, String clientUsername) throws EntityNotFoundException {
         return orderRepository.findByIdAndClient_Username(id, clientUsername).orElseThrow(() -> new EntityNotFoundException(
                 "Заказ под номером %d пользователя %s не найден".formatted(id, clientUsername)
         ));
     }
 
-    public Order getByIdAndGuideUsername(Long id, String guideUsername) {
+    public Order getByIdAndGuideUsername(Long id, String guideUsername) throws EntityNotFoundException {
         return orderRepository.findByIdAndGuide_Username(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
                 "Заказ под номером %d гида %s не найден".formatted(id, guideUsername)
         ));
@@ -41,7 +41,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void createOrder(Order order, User client, Tour tour) {
+    public void createOrder(Order order, User client, Tour tour) throws EntityNotFoundException {
         LocalDate orderDate = LocalDate.now();
         OrderStatus orderStatus = orderStatusService.getByName("На рассмотрении");
         order.setClient(client);
@@ -53,7 +53,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void changeStatus(Order order, boolean accepted) {
+    public void changeStatus(Order order, boolean accepted) throws EntityNotFoundException {
         if (order.getStatus().getName().equalsIgnoreCase("На рассмотрении"))
             return;
 

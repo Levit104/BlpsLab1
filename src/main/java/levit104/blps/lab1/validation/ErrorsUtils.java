@@ -13,8 +13,10 @@ public class ErrorsUtils {
     public static final String USERNAME_TAKEN = "Пользователь с указанным именем уже существует";
     public static final String EMAIL_TAKEN = "Пользователь с указанным email уже существует";
     public static final String TOUR_NAME_TAKEN = "Экскурсия с указанным именем уже существует";
+    public static final String BLANK_FIELD = "Заполните поле";
+    public static final String INVALID_VALUE = "Некорректное значение";
 
-    public static List<UserErrorsDTO> returnErrors(BindingResult bindingResult) {
+    public static List<UserErrorsDTO> collectErrors(BindingResult bindingResult) {
         Map<String, UserErrorsDTO> errorsMap = new HashMap<>();
 
         for (FieldError error : bindingResult.getFieldErrors()) {

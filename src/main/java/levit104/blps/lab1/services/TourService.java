@@ -23,7 +23,7 @@ public class TourService {
         return tourRepository.findByName(name);
     }
 
-    public Tour getByIdAndGuideUsername(Long id, String guideUsername) {
+    public Tour getByIdAndGuideUsername(Long id, String guideUsername) throws EntityNotFoundException {
         return tourRepository.findByIdAndGuide_Username(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
                 "Экскурсия под номером %d пользователя %s не найдена".formatted(id, guideUsername)
         ));
@@ -38,7 +38,7 @@ public class TourService {
     }
 
     @Transactional
-    public void save(Tour tour, User guide) {
+    public void add(Tour tour, User guide) throws EntityNotFoundException {
         City city = cityService.getByNameAndCountryName(
                 tour.getCity().getName(), tour.getCity().getCountry().getName()
         );

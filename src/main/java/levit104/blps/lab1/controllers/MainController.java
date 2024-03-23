@@ -1,20 +1,23 @@
 package levit104.blps.lab1.controllers;
 
 import levit104.blps.lab1.dto.UserResponseDTO;
+import levit104.blps.lab1.exceptions.EntityNotFoundException;
 import levit104.blps.lab1.models.User;
 import levit104.blps.lab1.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 
-// TODO обработка исключений
 // TODO проверка, что у гида есть роль (при выводе списков экскурсий)
 
 @RestController
@@ -26,9 +29,15 @@ public class MainController {
     // Информация о пользователе (неважно Гид или нет)
     @GetMapping("/users/{username}")
     public ResponseEntity<?> showUserInfo(@PathVariable String username) {
-        User user = userService.getByUsername(username);
-        UserResponseDTO responseDTO = modelMapper.map(user, UserResponseDTO.class);
-        return ResponseEntity.ok(responseDTO);
+
+        try {
+            User user = userService.getByUsername(username);
+            UserResponseDTO responseDTO = modelMapper.map(user, UserResponseDTO.class);
+            return ResponseEntity.ok(responseDTO);
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
     }
 
     // Выдача роли Гида
@@ -36,15 +45,14 @@ public class MainController {
     @PatchMapping("/users/{username}/add-privilege")
     public ResponseEntity<?> addGuidePrivilege(@PathVariable String username,
                                                Principal principal) {
-
         if (principal.getName().equals(username))
-            return ResponseEntity.badRequest().body("Назначение роли администратору"); // TODO исключение/объект ошибки?
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Назначение роли администратору");
 
-        userService.giveGuideRole(username);
-        return ResponseEntity.ok("OK");
+        try {
+            userService.giveGuideRole(username);
+            return ResponseEntity.ok("Роль успешно выдана");
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
-
-
-
-
 }

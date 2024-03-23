@@ -5,8 +5,6 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-// TODO проверка client_id != guide_id
-
 @Entity
 @Table(name = "orders")
 @Data

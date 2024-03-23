@@ -7,11 +7,6 @@ import lombok.ToString;
 
 import java.util.List;
 
-// Принята
-// Отклонена
-// На рассмотрении
-// Выполнена?
-
 @Entity
 @Data
 @ToString(exclude = {"orders"})

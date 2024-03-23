@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class RoleService {
     private final RoleRepository roleRepository;
 
-    public Role getByName(String name) {
-        return roleRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Ошибка авторизации"));
+    public Role getByName(String name) throws EntityNotFoundException {
+        return roleRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException(
+                "Ошибка авторизации: %s не найдена".formatted(name)
+        ));
     }
 }

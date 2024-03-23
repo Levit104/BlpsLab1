@@ -34,8 +34,6 @@ public class User {
     )
     private List<Role> roles;
 
-    // -------------------------------------------
-    // TODO - отдельно
     @Column(nullable = false, length = 32)
     private String firstName;
 
@@ -50,5 +48,4 @@ public class User {
 
     @OneToMany(mappedBy = "guide")
     private List<Order> guideOrders;
-    // -------------------------------------------
 }
