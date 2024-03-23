@@ -1,7 +1,6 @@
 package levit104.blps.lab1.repos;
 
 import levit104.blps.lab1.models.Tour;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

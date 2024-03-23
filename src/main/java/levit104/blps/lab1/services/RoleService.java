@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RoleService {
     private final RoleRepository roleRepository;
 
-    public Role findByName(String name) {
+    public Role getByName(String name) {
         return roleRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Ошибка авторизации"));
     }
 }

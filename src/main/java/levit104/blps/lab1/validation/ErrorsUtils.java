@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 public class ErrorsUtils {
+    public static final String USERNAME_TAKEN = "Пользователь с указанным именем уже существует";
+    public static final String EMAIL_TAKEN = "Пользователь с указанным email уже существует";
+    public static final String TOUR_NAME_TAKEN = "Экскурсия с указанным именем уже существует";
+
     public static List<UserErrorsDTO> returnErrors(BindingResult bindingResult) {
         Map<String, UserErrorsDTO> errorsMap = new HashMap<>();
 

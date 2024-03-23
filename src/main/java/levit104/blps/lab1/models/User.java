@@ -2,12 +2,16 @@ package levit104.blps.lab1.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.List;
 
 @Entity
 @Data
 @Table(name = "users")
+@ToString(exclude = {"tours", "clientOrders", "guideOrders"})
+@EqualsAndHashCode(exclude = {"tours", "clientOrders", "guideOrders"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,5 +44,11 @@ public class User {
 
     @OneToMany(mappedBy = "guide")
     private List<Tour> tours;
+
+    @OneToMany(mappedBy = "client")
+    private List<Order> clientOrders;
+
+    @OneToMany(mappedBy = "guide")
+    private List<Order> guideOrders;
     // -------------------------------------------
 }

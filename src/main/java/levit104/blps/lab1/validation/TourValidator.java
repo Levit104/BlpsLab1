@@ -23,6 +23,6 @@ public class TourValidator implements Validator {
         Tour tour = (Tour) target;
 
         if (tourService.findByName(tour.getName()).isPresent())
-            errors.rejectValue("name", "", "Экскурсия с указанным именем уже существует");
+            errors.rejectValue("name", "", ErrorsUtils.TOUR_NAME_TAKEN);
     }
 }

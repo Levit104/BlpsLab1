@@ -2,9 +2,15 @@ package levit104.blps.lab1.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = {"orders"})
+@EqualsAndHashCode(exclude = {"orders"})
 public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +29,7 @@ public class Tour {
     @ManyToOne
     @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false)
     private City city;
+
+    @OneToMany(mappedBy = "tour")
+    private List<Order> orders;
 }

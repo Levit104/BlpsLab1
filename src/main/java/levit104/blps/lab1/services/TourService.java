@@ -24,13 +24,9 @@ public class TourService {
     }
 
     public Tour getByIdAndGuideUsername(Long id, String guideUsername) {
-        return findByIdAndGuideUsername(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
-                "Экскурсия под номером %d пользователя %s не найдена".formatted(id, guideUsername))
-        );
-    }
-
-    public Optional<Tour> findByIdAndGuideUsername(Long id, String guideUsername) {
-        return tourRepository.findByIdAndGuide_Username(id, guideUsername);
+        return tourRepository.findByIdAndGuide_Username(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
+                "Экскурсия под номером %d пользователя %s не найдена".formatted(id, guideUsername)
+        ));
     }
 
     public List<Tour> findAllByGuideUsername(String guideUsername) {
