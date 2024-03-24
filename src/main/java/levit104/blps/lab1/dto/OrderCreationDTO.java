@@ -1,6 +1,7 @@
 package levit104.blps.lab1.dto;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.Data;
@@ -17,4 +18,10 @@ public class OrderCreationDTO {
     private Integer numberOfPeople;
 
     private String description; // может быть null
+
+    @NotNull(message = ValidationUtils.BLANK_FIELD)
+    private Long tourId;
+
+    @NotBlank(message = ValidationUtils.BLANK_FIELD)
+    private String guideUsername;
 }

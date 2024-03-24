@@ -29,8 +29,7 @@ public class OrderClientController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/users/{username}/orders")
     public List<OrderClientDTO> showOrders(@PathVariable String username, Principal principal) {
-        if (!principal.getName().equals(username))
-            throw new ForbiddenException("Нет доступа к чужой странице");
+        if (!principal.getName().equals(username)) throw new ForbiddenException("Нет доступа к чужой странице");
 
         List<Order> orders = orderService.findAllByClientUsername(username);
         return mappingUtils.mapList(orders, OrderClientDTO.class);
@@ -40,30 +39,30 @@ public class OrderClientController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/users/{username}/orders/{id}")
     public OrderClientDTO showOrderInfo(@PathVariable String username, @PathVariable Long id, Principal principal) {
-        if (!principal.getName().equals(username))
-            throw new ForbiddenException("Нет доступа к чужой странице");
+        if (!principal.getName().equals(username)) throw new ForbiddenException("Нет доступа к чужой странице");
 
         Order order = orderService.getByIdAndClientUsername(id, username);
         return mappingUtils.mapObject(order, OrderClientDTO.class);
     }
 
-    // TODO POST: /users/orders
     // Создать заказ
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/users/{username}/tours/{id}/book")
+    @PostMapping("/users/{username}/orders")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderClientDTO createOrder(@PathVariable String username,
-                                      @PathVariable Long id,
                                       @RequestBody @Valid OrderCreationDTO requestDTO,
                                       BindingResult bindingResult,
                                       Principal principal) {
+        if (!principal.getName().equals(username))
+            throw new ForbiddenException("Нет доступа к чужой странице");
+
         Order order = mappingUtils.mapObject(requestDTO, Order.class);
 
         orderValidator.validate(order, bindingResult);
         if (bindingResult.hasErrors())
             ValidationUtils.handleCreationErrors(bindingResult);
 
-        orderService.createOrder(order, principal.getName(), id, username);
+        orderService.createOrder(order, username);
         return mappingUtils.mapObject(order, OrderClientDTO.class);
     }
 }

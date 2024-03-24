@@ -54,9 +54,9 @@ public class OrderService {
     }
 
     @Transactional
-    public void createOrder(Order order, String clientUsername, Long tourId, String guideUsername) {
+    public void createOrder(Order order, String clientUsername) {
         User client = userService.getByUsername(clientUsername);
-        Tour tour = tourService.getByIdAndGuideUsername(tourId, guideUsername);
+        Tour tour = tourService.getByIdAndGuideUsername(order.getTour().getId(), order.getGuide().getUsername());
         OrderStatus orderStatus = orderStatusService.getByName("На рассмотрении");
         LocalDate orderDate = LocalDate.now();
         order.setClient(client);

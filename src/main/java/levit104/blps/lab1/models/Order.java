@@ -43,6 +43,7 @@ public class Order {
 
     @PrePersist
     public void checkClientGuide() {
-        if (client.equals(guide)) throw new InvalidDataException("Клиент и Гид - один и тот же пользователь");
+        if (client.equals(guide))
+            throw new InvalidDataException("Клиент и Гид - один и тот же пользователь");
     }
 }
