@@ -1,0 +1,16 @@
+server:
+    port: 10480
+    error:
+        include-message: always
+spring:
+    application:
+        name: BlpsLab1
+    datasource:
+        driverClassName: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/blps
+        username: postgres
+        password: qwerty123
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
