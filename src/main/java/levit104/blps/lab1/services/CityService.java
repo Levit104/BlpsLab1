@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class CityService {
     private final CityRepository cityRepository;
 
-    public City getByNameAndCountryName(String name, String countryName) throws EntityNotFoundException {
+    public City getByNameAndCountryName(String name, String countryName) {
         return cityRepository.findByNameAndCountry_Name(name, countryName).orElseThrow(() -> new EntityNotFoundException(
-                "Город %s в стране %s не найден".formatted(name, countryName)
+                "Город '%s' в стране '%s' не найден".formatted(name, countryName)
         ));
     }
 }

@@ -1,6 +1,7 @@
 package levit104.blps.lab1.models;
 
 import jakarta.persistence.*;
+import levit104.blps.lab1.exceptions.InvalidDataException;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -42,7 +43,6 @@ public class Order {
 
     @PrePersist
     public void checkClientGuide() {
-        if (client.equals(guide))
-            throw new IllegalArgumentException("Клиент и Гид - один и тот же пользователь");
+        if (client.equals(guide)) throw new InvalidDataException("Клиент и Гид - один и тот же пользователь");
     }
 }

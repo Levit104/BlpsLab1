@@ -2,6 +2,7 @@ package levit104.blps.lab1.validation;
 
 import levit104.blps.lab1.models.User;
 import levit104.blps.lab1.services.UserService;
+import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -23,9 +24,9 @@ public class UserValidator implements Validator {
         User user = (User) target;
 
         if (userService.findByUsername(user.getUsername()).isPresent())
-            errors.rejectValue("username", "", ErrorsUtils.USERNAME_TAKEN);
+            errors.rejectValue("username", "", ValidationUtils.USERNAME_TAKEN);
 
         if (userService.findByEmail(user.getEmail()).isPresent())
-            errors.rejectValue("email", "", ErrorsUtils.EMAIL_TAKEN);
+            errors.rejectValue("email", "", ValidationUtils.EMAIL_TAKEN);
     }
 }

@@ -15,5 +15,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findAllByClient_Username(String clientUsername);
 
-    List<Order> findAllByGuide_UsernameAndStatus_Name(String guideUsername, String statusName);
+    List<Order> findAllByGuide_Username(String guideUsername);
 }

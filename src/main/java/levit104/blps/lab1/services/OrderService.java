@@ -1,6 +1,7 @@
 package levit104.blps.lab1.services;
 
 import levit104.blps.lab1.exceptions.EntityNotFoundException;
+import levit104.blps.lab1.exceptions.InvalidDataException;
 import levit104.blps.lab1.models.Order;
 import levit104.blps.lab1.models.OrderStatus;
 import levit104.blps.lab1.models.Tour;
@@ -19,46 +20,65 @@ import java.util.List;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderStatusService orderStatusService;
+    private final UserService userService;
+    private final TourService tourService;
 
-    public Order getByIdAndClientUsername(Long id, String clientUsername) throws EntityNotFoundException {
+    public Order getByIdAndClientUsername(Long id, String clientUsername) {
         return orderRepository.findByIdAndClient_Username(id, clientUsername).orElseThrow(() -> new EntityNotFoundException(
-                "Заказ под номером %d пользователя %s не найден".formatted(id, clientUsername)
+                "Заказ под номером %d пользователя '%s' не найден".formatted(id, clientUsername)
         ));
     }
 
-    public Order getByIdAndGuideUsername(Long id, String guideUsername) throws EntityNotFoundException {
+    public Order getByIdAndGuideUsername(Long id, String guideUsername) {
         return orderRepository.findByIdAndGuide_Username(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
-                "Заказ под номером %d гида %s не найден".formatted(id, guideUsername)
+                "Заказ под номером %d для гида '%s' не найден".formatted(id, guideUsername)
         ));
     }
 
     public List<Order> findAllByClientUsername(String clientUsername) {
-        return orderRepository.findAllByClient_Username(clientUsername);
+        List<Order> orders = orderRepository.findAllByClient_Username(clientUsername);
+
+        if (orders.isEmpty())
+            throw new EntityNotFoundException("Заказы пользователя '%s' не найдены".formatted(clientUsername));
+
+        return orders;
     }
 
-    public List<Order> findAllByGuideUsername(String guideUsername, String statusName) {
-        return orderRepository.findAllByGuide_UsernameAndStatus_Name(guideUsername, statusName);
+    public List<Order> findAllByGuideUsername(String guideUsername) {
+        List<Order> orders = orderRepository.findAllByGuide_Username(guideUsername);
+
+        if (orders.isEmpty())
+            throw new EntityNotFoundException("Заказы для гида '%s' не найдены".formatted(guideUsername));
+
+        return orders;
     }
 
     @Transactional
-    public void createOrder(Order order, User client, Tour tour) throws EntityNotFoundException {
-        LocalDate orderDate = LocalDate.now();
+    public void createOrder(Order order, String clientUsername, Long tourId, String guideUsername) {
+        User client = userService.getByUsername(clientUsername);
+        Tour tour = tourService.getByIdAndGuideUsername(tourId, guideUsername);
         OrderStatus orderStatus = orderStatusService.getByName("На рассмотрении");
+        LocalDate orderDate = LocalDate.now();
         order.setClient(client);
         order.setTour(tour);
         order.setGuide(tour.getGuide());
-        order.setOrderDate(orderDate);
         order.setStatus(orderStatus);
+        order.setOrderDate(orderDate);
         orderRepository.save(order);
     }
 
     @Transactional
-    public void changeStatus(Order order, boolean accepted) throws EntityNotFoundException {
-        if (order.getStatus().getName().equalsIgnoreCase("На рассмотрении"))
-            return;
+    public String changeStatus(Long orderId, String guideUsername, boolean accepted) {
+        Order order = getByIdAndGuideUsername(orderId, guideUsername);
+        OrderStatus status = orderStatusService.getByName("На рассмотрении");
+
+        if (!order.getStatus().equals(status))
+            throw new InvalidDataException("Заказ уже был рассмотрен");
 
         String statusName = accepted ? "Принят" : "Отклонён";
         order.setStatus(orderStatusService.getByName(statusName));
         orderRepository.save(order);
+
+        return "Статус заказа изменён на '%s'".formatted(statusName);
     }
 }

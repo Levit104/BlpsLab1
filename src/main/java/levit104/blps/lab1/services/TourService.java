@@ -18,30 +18,41 @@ import java.util.Optional;
 public class TourService {
     private final TourRepository tourRepository;
     private final CityService cityService;
+    private final UserService userService;
 
     public Optional<Tour> findByName(String name) {
         return tourRepository.findByName(name);
     }
 
-    public Tour getByIdAndGuideUsername(Long id, String guideUsername) throws EntityNotFoundException {
+    public Tour getByIdAndGuideUsername(Long id, String guideUsername) {
         return tourRepository.findByIdAndGuide_Username(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
-                "Экскурсия под номером %d пользователя %s не найдена".formatted(id, guideUsername)
+                "Экскурсия под номером %d гида '%s' не найдена".formatted(id, guideUsername)
         ));
     }
 
     public List<Tour> findAllByGuideUsername(String guideUsername) {
-        return tourRepository.findAllByGuide_Username(guideUsername);
+        List<Tour> tours = tourRepository.findAllByGuide_Username(guideUsername);
+
+        if (tours.isEmpty())
+            throw new EntityNotFoundException("Экскурсии гида '%s' не найдены".formatted(guideUsername));
+
+        return tours;
     }
 
     public List<Tour> findAllByCityNameAndCountryName(String cityName, String countryName) {
-        return tourRepository.findAllByCity_NameAndCity_Country_Name(cityName, countryName);
+        List<Tour> tours = tourRepository.findAllByCity_NameAndCity_Country_Name(cityName, countryName);
+
+        if (tours.isEmpty())
+            throw new EntityNotFoundException("Экскурсии в городе '%s' в стране '%s' не найдены"
+                    .formatted(cityName, countryName));
+
+        return tours;
     }
 
     @Transactional
-    public void add(Tour tour, User guide) throws EntityNotFoundException {
-        City city = cityService.getByNameAndCountryName(
-                tour.getCity().getName(), tour.getCity().getCountry().getName()
-        );
+    public void add(Tour tour, String guideUsername) {
+        City city = cityService.getByNameAndCountryName(tour.getCity().getName(), tour.getCity().getCountry().getName());
+        User guide = userService.getByUsername(guideUsername);
         tour.setCity(city);
         tour.setGuide(guide);
         tourRepository.save(tour);

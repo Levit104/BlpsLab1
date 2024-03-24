@@ -2,6 +2,7 @@ package levit104.blps.lab1.validation;
 
 import levit104.blps.lab1.models.Tour;
 import levit104.blps.lab1.services.TourService;
+import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,6 @@ public class TourValidator implements Validator {
         Tour tour = (Tour) target;
 
         if (tourService.findByName(tour.getName()).isPresent())
-            errors.rejectValue("name", "", ErrorsUtils.TOUR_NAME_TAKEN);
+            errors.rejectValue("name", "", ValidationUtils.TOUR_NAME_TAKEN);
     }
 }

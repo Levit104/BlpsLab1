@@ -1,7 +1,7 @@
 package levit104.blps.lab1.validation;
 
 import levit104.blps.lab1.models.Order;
-import levit104.blps.lab1.services.OrderService;
+import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -24,6 +24,6 @@ public class OrderValidator implements Validator {
         Order order = (Order) target;
 
         if (order.getTourDate().isBefore(LocalDate.now()))
-            errors.rejectValue("tourDate", "", ErrorsUtils.INVALID_VALUE);
+            errors.rejectValue("tourDate", "", ValidationUtils.INVALID_VALUE);
     }
 }

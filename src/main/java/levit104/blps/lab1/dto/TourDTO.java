@@ -3,7 +3,7 @@ package levit104.blps.lab1.dto;
 import lombok.Data;
 
 @Data
-public class TourResponseDTO {
+public class TourDTO {
     private Long id;
     private String name;
     private Integer minPrice;
