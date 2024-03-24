@@ -1,5 +1,6 @@
 package levit104.blps.lab1.dto;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,10 +12,11 @@ import java.time.LocalDate;
 @Data
 public class OrderCreationDTO {
     @NotNull(message = ValidationUtils.BLANK_FIELD)
+    @Future(message = ValidationUtils.PAST_DATE)
     private LocalDate tourDate;
 
     @NotNull(message = ValidationUtils.BLANK_FIELD)
-    @Min(value = 1, message = ValidationUtils.INVALID_VALUE)
+    @Min(value = 1, message = ValidationUtils.INVALID_NUMBER)
     private Integer numberOfPeople;
 
     private String description; // может быть null

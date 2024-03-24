@@ -13,9 +13,9 @@ public class TourCreationDTO {
     @NotNull(message = ValidationUtils.BLANK_FIELD)
     private Integer minPrice;
 
-    @NotNull(message = ValidationUtils.BLANK_FIELD)
+    @NotBlank(message = ValidationUtils.BLANK_FIELD)
     private String cityName;
 
-    @NotNull(message = ValidationUtils.BLANK_FIELD)
+    @NotBlank(message = ValidationUtils.BLANK_FIELD)
     private String cityCountryName;
 }

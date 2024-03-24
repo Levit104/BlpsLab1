@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-// TODO проверка, что у гида есть роль (при выводе списков экскурсий)
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -65,16 +64,17 @@ public class UserService implements UserDetailsService {
         if (adminName.equals(username))
             throw new InvalidDataException("Выдача роли администратору");
 
+        String roleName = "ROLE_GUIDE";
         User user = getByUsername(username);
-        Role role = roleService.getByName("ROLE_GUIDE");
+        Role role = roleService.getByName(roleName);
 
         if (user.getRoles().contains(role))
-            throw new InvalidDataException("Роль уже была выдана");
+            throw new InvalidDataException("Роль '%s' уже была выдана".formatted(roleName));
 
         user.getRoles().add(role);
         userRepository.save(user);
 
-        return "Роль успешно выдана";
+        return "Роль '%s' успешно выдана".formatted(roleName);
     }
 
     public List<User> findAllByCityNameAndCountryName(String cityName, String countryName) {

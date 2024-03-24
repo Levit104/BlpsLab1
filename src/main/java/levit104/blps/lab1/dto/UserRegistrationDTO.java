@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class UserRegistrationDTO {
-    @Email(message = ValidationUtils.INVALID_VALUE)
+    @Email(message = ValidationUtils.INVALID_EMAIL)
     @NotBlank(message = ValidationUtils.BLANK_FIELD)
     private String email;
 

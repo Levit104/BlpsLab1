@@ -26,7 +26,7 @@ public class TourService {
 
     public Tour getByIdAndGuideUsername(Long id, String guideUsername) {
         return tourRepository.findByIdAndGuide_Username(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
-                "Экскурсия под номером %d гида '%s' не найдена".formatted(id, guideUsername)
+                "Экскурсия №%d у '%s' не найдена".formatted(id, guideUsername)
         ));
     }
 
@@ -34,7 +34,7 @@ public class TourService {
         List<Tour> tours = tourRepository.findAllByGuide_Username(guideUsername);
 
         if (tours.isEmpty())
-            throw new EntityNotFoundException("Экскурсии гида '%s' не найдены".formatted(guideUsername));
+            throw new EntityNotFoundException("Экскурсии у '%s' не найдены".formatted(guideUsername));
 
         return tours;
     }

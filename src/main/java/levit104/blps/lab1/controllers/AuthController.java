@@ -1,11 +1,11 @@
 package levit104.blps.lab1.controllers;
 
 import jakarta.validation.Valid;
-import levit104.blps.lab1.utils.MappingUtils;
-import levit104.blps.lab1.dto.UserRegistrationDTO;
 import levit104.blps.lab1.dto.UserDTO;
+import levit104.blps.lab1.dto.UserRegistrationDTO;
 import levit104.blps.lab1.models.User;
 import levit104.blps.lab1.services.UserService;
+import levit104.blps.lab1.utils.MappingUtils;
 import levit104.blps.lab1.utils.ValidationUtils;
 import levit104.blps.lab1.validation.UserValidator;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,6 @@
 package levit104.blps.lab1.controllers;
 
 import jakarta.validation.Valid;
-import levit104.blps.lab1.utils.MappingUtils;
 import levit104.blps.lab1.dto.TourCreationDTO;
 import levit104.blps.lab1.dto.TourDTO;
 import levit104.blps.lab1.dto.UserDTO;
@@ -10,6 +9,7 @@ import levit104.blps.lab1.models.Tour;
 import levit104.blps.lab1.models.User;
 import levit104.blps.lab1.services.TourService;
 import levit104.blps.lab1.services.UserService;
+import levit104.blps.lab1.utils.MappingUtils;
 import levit104.blps.lab1.utils.ValidationUtils;
 import levit104.blps.lab1.validation.TourValidator;
 import lombok.RequiredArgsConstructor;
@@ -31,14 +31,16 @@ public class TourController {
 
     // Экскурсии в городе
     @GetMapping("/tours")
-    public List<TourDTO> showToursInCity(@RequestParam String country, @RequestParam String city) {
+    public List<TourDTO> showToursInCity(@RequestParam String country,
+                                         @RequestParam String city) {
         List<Tour> tours = tourService.findAllByCityNameAndCountryName(city, country);
         return mappingUtils.mapList(tours, TourDTO.class);
     }
 
     // Гиды в городе
     @GetMapping("/guides")
-    public List<UserDTO> showGuidesInCity(@RequestParam String country, @RequestParam String city) {
+    public List<UserDTO> showGuidesInCity(@RequestParam String country,
+                                          @RequestParam String city) {
         List<User> guides = userService.findAllByCityNameAndCountryName(city, country);
         return mappingUtils.mapList(guides, UserDTO.class);
     }
@@ -52,7 +54,8 @@ public class TourController {
 
     // Конкретная экскурсия гида
     @GetMapping("/users/{username}/tours/{id}")
-    public TourDTO showGuideTourInfo(@PathVariable String username, @PathVariable Long id) {
+    public TourDTO showGuideTourInfo(@PathVariable String username,
+                                     @PathVariable Long id) {
         Tour tour = tourService.getByIdAndGuideUsername(id, username);
         return mappingUtils.mapObject(tour, TourDTO.class);
     }

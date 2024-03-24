@@ -1,9 +1,9 @@
 package levit104.blps.lab1.controllers;
 
-import levit104.blps.lab1.utils.MappingUtils;
 import levit104.blps.lab1.dto.UserDTO;
 import levit104.blps.lab1.models.User;
 import levit104.blps.lab1.services.UserService;
+import levit104.blps.lab1.utils.MappingUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +29,8 @@ public class UserController {
     // Выдача роли Гида
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/users/{username}/add-privilege")
-    public String addGuidePrivilege(@PathVariable String username, Principal principal) {
+    public String addGuidePrivilege(@PathVariable String username,
+                                    Principal principal) {
         return userService.giveGuideRole(principal.getName(), username);
     }
 }

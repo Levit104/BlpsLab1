@@ -25,13 +25,13 @@ public class OrderService {
 
     public Order getByIdAndClientUsername(Long id, String clientUsername) {
         return orderRepository.findByIdAndClient_Username(id, clientUsername).orElseThrow(() -> new EntityNotFoundException(
-                "Заказ под номером %d пользователя '%s' не найден".formatted(id, clientUsername)
+                "Заказ №%d у '%s' не найден".formatted(id, clientUsername)
         ));
     }
 
     public Order getByIdAndGuideUsername(Long id, String guideUsername) {
         return orderRepository.findByIdAndGuide_Username(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
-                "Заказ под номером %d для гида '%s' не найден".formatted(id, guideUsername)
+                "Заказ №%d для '%s' не найден".formatted(id, guideUsername)
         ));
     }
 
@@ -39,7 +39,7 @@ public class OrderService {
         List<Order> orders = orderRepository.findAllByClient_Username(clientUsername);
 
         if (orders.isEmpty())
-            throw new EntityNotFoundException("Заказы пользователя '%s' не найдены".formatted(clientUsername));
+            throw new EntityNotFoundException("Заказы у '%s' не найдены".formatted(clientUsername));
 
         return orders;
     }
@@ -48,7 +48,7 @@ public class OrderService {
         List<Order> orders = orderRepository.findAllByGuide_Username(guideUsername);
 
         if (orders.isEmpty())
-            throw new EntityNotFoundException("Заказы для гида '%s' не найдены".formatted(guideUsername));
+            throw new EntityNotFoundException("Заказы для '%s' не найдены".formatted(guideUsername));
 
         return orders;
     }
