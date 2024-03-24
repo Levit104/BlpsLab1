@@ -30,6 +30,19 @@ public class OrderGuideController {
         return mappingUtils.mapList(orders, OrderGuideDTO.class);
     }
 
+    // Конкретный заказ для гида
+    @PreAuthorize("hasRole('GUIDE')")
+    @GetMapping("/users/{username}/available-orders/{id}")
+    public OrderGuideDTO showAvailableOrderInfo(@PathVariable String username,
+                                                @PathVariable Long id,
+                                                Principal principal) {
+        if (!principal.getName().equals(username))
+            throw new ForbiddenException("Нет доступа к чужой странице");
+
+        Order order = orderService.getByIdAndGuideUsername(id, username);
+        return mappingUtils.mapObject(order, OrderGuideDTO.class);
+    }
+
     // Принять или отклонить заказ
     @PreAuthorize("hasRole('GUIDE')")
     @PatchMapping("/users/{username}/available-orders/{id}")
