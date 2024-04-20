@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,10 +18,6 @@ public class TourService {
     private final TourRepository tourRepository;
     private final CityService cityService;
     private final UserService userService;
-
-    public Optional<Tour> findByName(String name) {
-        return tourRepository.findByName(name);
-    }
 
     public Tour getByIdAndGuideUsername(Long id, String guideUsername) {
         return tourRepository.findByIdAndGuide_Username(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(

@@ -11,7 +11,7 @@ public class OrderClientDTO {
     private TourDTO tour;
     private LocalDate tourDate;
     private Integer numberOfPeople;
-    private String description; // может быть null
+    private String description;
     private LocalDate orderDate;
     private String statusName;
 }

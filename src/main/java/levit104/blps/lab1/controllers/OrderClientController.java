@@ -3,7 +3,6 @@ package levit104.blps.lab1.controllers;
 import jakarta.validation.Valid;
 import levit104.blps.lab1.dto.OrderClientDTO;
 import levit104.blps.lab1.dto.OrderCreationDTO;
-import levit104.blps.lab1.exceptions.ForbiddenException;
 import levit104.blps.lab1.models.Order;
 import levit104.blps.lab1.services.OrderService;
 import levit104.blps.lab1.utils.MappingUtils;
@@ -26,11 +25,8 @@ public class OrderClientController {
     // Заказы клиента
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/users/{username}/orders")
-    public List<OrderClientDTO> showOrders(@PathVariable String username,
-                                           Principal principal) {
-        if (!principal.getName().equals(username))
-            throw new ForbiddenException("Нет доступа к чужой странице");
-
+    public List<OrderClientDTO> showOrders(@PathVariable String username, Principal principal) {
+        ValidationUtils.checkAccess(principal.getName(), username);
         List<Order> orders = orderService.findAllByClientUsername(username);
         return mappingUtils.mapList(orders, OrderClientDTO.class);
     }
@@ -38,12 +34,8 @@ public class OrderClientController {
     // Конкретный заказ клиента
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/users/{username}/orders/{id}")
-    public OrderClientDTO showOrderInfo(@PathVariable String username,
-                                        @PathVariable Long id,
-                                        Principal principal) {
-        if (!principal.getName().equals(username))
-            throw new ForbiddenException("Нет доступа к чужой странице");
-
+    public OrderClientDTO showOrderInfo(@PathVariable String username, @PathVariable Long id, Principal principal) {
+        ValidationUtils.checkAccess(principal.getName(), username);
         Order order = orderService.getByIdAndClientUsername(id, username);
         return mappingUtils.mapObject(order, OrderClientDTO.class);
     }
@@ -56,14 +48,9 @@ public class OrderClientController {
                                       @RequestBody @Valid OrderCreationDTO requestDTO,
                                       BindingResult bindingResult,
                                       Principal principal) {
-        if (!principal.getName().equals(username))
-            throw new ForbiddenException("Нет доступа к чужой странице");
-
+        ValidationUtils.checkAccess(principal.getName(), username);
+        ValidationUtils.handleCreationErrors(bindingResult);
         Order order = mappingUtils.mapObject(requestDTO, Order.class);
-
-        if (bindingResult.hasErrors())
-            ValidationUtils.handleCreationErrors(bindingResult);
-
         orderService.createOrder(order, username);
         return mappingUtils.mapObject(order, OrderClientDTO.class);
     }

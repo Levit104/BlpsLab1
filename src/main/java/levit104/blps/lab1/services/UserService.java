@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,24 +24,16 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
 
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
     // Чтобы выводить сообщение о том, что пользователь не найден (сообщение у UsernameNotFoundException игнорируется)
     public User getByUsername(String username) {
-        return findByUsername(username).orElseThrow(() -> new EntityNotFoundException(
+        return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(
                 "Пользователь '%s' не найден".formatted(username)
         ));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
                 "Пользователь '%s' не найден".formatted(username)
         ));
         return new org.springframework.security.core.userdetails.User(

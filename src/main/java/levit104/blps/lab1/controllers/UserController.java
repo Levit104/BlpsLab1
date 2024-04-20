@@ -29,8 +29,7 @@ public class UserController {
     // Выдача роли Гида
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/users/{username}/add-privilege")
-    public String addGuidePrivilege(@PathVariable String username,
-                                    Principal principal) {
+    public String addGuidePrivilege(@PathVariable String username, Principal principal) {
         return userService.giveGuideRole(principal.getName(), username);
     }
 }

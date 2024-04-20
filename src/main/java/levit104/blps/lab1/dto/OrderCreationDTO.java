@@ -1,9 +1,6 @@
 package levit104.blps.lab1.dto;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.Data;
 
@@ -13,10 +10,11 @@ import java.time.LocalDate;
 public class OrderCreationDTO {
     @NotNull(message = ValidationUtils.BLANK_FIELD)
     @Future(message = ValidationUtils.PAST_DATE)
-    private LocalDate tourDate;
+    private LocalDate tourDate; // TODO кол-во туров на дату должно быть ограничено
 
     @NotNull(message = ValidationUtils.BLANK_FIELD)
     @Min(value = 1, message = ValidationUtils.INVALID_NUMBER)
+    @Max(value = 25, message = ValidationUtils.INVALID_NUMBER)
     private Integer numberOfPeople;
 
     private String description; // может быть null
