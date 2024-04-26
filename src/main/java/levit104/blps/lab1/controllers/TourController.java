@@ -29,21 +29,21 @@ public class TourController {
     // Экскурсии в городе
     @GetMapping("/tours")
     public List<TourDTO> showToursInCity(@RequestParam String country, @RequestParam String city) {
-        List<Tour> tours = tourService.findAllByCityNameAndCountryName(city, country);
+        List<Tour> tours = tourService.getAllByCityNameAndCountryName(city, country);
         return mappingUtils.mapList(tours, TourDTO.class);
     }
 
     // Гиды в городе
     @GetMapping("/guides")
     public List<UserDTO> showGuidesInCity(@RequestParam String country, @RequestParam String city) {
-        List<User> guides = userService.findAllByCityNameAndCountryName(city, country);
+        List<User> guides = userService.getAllByCityNameAndCountryName(city, country);
         return mappingUtils.mapList(guides, UserDTO.class);
     }
 
     // Экскурсии гида
     @GetMapping("/users/{username}/tours")
     public List<TourDTO> showGuideTours(@PathVariable String username) {
-        List<Tour> tours = tourService.findAllByGuideUsername(username);
+        List<Tour> tours = tourService.getAllByGuideUsername(username);
         return mappingUtils.mapList(tours, TourDTO.class);
     }
 

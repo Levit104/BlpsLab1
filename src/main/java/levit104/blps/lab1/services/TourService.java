@@ -25,7 +25,7 @@ public class TourService {
         ));
     }
 
-    public List<Tour> findAllByGuideUsername(String guideUsername) {
+    public List<Tour> getAllByGuideUsername(String guideUsername) {
         List<Tour> tours = tourRepository.findAllByGuide_Username(guideUsername);
 
         if (tours.isEmpty())
@@ -34,7 +34,7 @@ public class TourService {
         return tours;
     }
 
-    public List<Tour> findAllByCityNameAndCountryName(String cityName, String countryName) {
+    public List<Tour> getAllByCityNameAndCountryName(String cityName, String countryName) {
         List<Tour> tours = tourRepository.findAllByCity_NameAndCity_Country_Name(cityName, countryName);
 
         if (tours.isEmpty())

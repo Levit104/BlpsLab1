@@ -8,8 +8,8 @@ import lombok.ToString;
 import java.util.List;
 
 @Entity
-@Data
 @Table(name = "users")
+@Data
 @ToString(exclude = {"tours", "clientOrders", "guideOrders"})
 @EqualsAndHashCode(exclude = {"tours", "clientOrders", "guideOrders"})
 public class User {

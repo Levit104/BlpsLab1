@@ -27,7 +27,7 @@ public class OrderClientController {
     @GetMapping("/users/{username}/orders")
     public List<OrderClientDTO> showOrders(@PathVariable String username, Principal principal) {
         ValidationUtils.checkAccess(principal.getName(), username);
-        List<Order> orders = orderService.findAllByClientUsername(username);
+        List<Order> orders = orderService.getAllByClientUsername(username);
         return mappingUtils.mapList(orders, OrderClientDTO.class);
     }
 

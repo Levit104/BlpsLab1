@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class OrderCreationDTO {
     @NotNull(message = ValidationUtils.BLANK_FIELD)
     @Future(message = ValidationUtils.PAST_DATE)
-    private LocalDate tourDate; // TODO кол-во туров на дату должно быть ограничено
+    private LocalDate tourDate;
 
     @NotNull(message = ValidationUtils.BLANK_FIELD)
     @Min(value = 1, message = ValidationUtils.INVALID_NUMBER)

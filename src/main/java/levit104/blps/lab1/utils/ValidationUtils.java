@@ -4,6 +4,7 @@ import levit104.blps.lab1.exceptions.EntityCreationException;
 import levit104.blps.lab1.exceptions.ForbiddenException;
 import org.springframework.validation.BindingResult;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ValidationUtils {
@@ -28,7 +29,7 @@ public class ValidationUtils {
     }
 
     public static void checkAccess(String expectedUsername, String actualUsername) {
-        if (!expectedUsername.equals(actualUsername))
+        if (!Objects.equals(expectedUsername, actualUsername))
             throw new ForbiddenException("Нет доступа к данной странице");
     }
 }

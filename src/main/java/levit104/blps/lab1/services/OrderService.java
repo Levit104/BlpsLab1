@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,7 +36,7 @@ public class OrderService {
         ));
     }
 
-    public List<Order> findAllByClientUsername(String clientUsername) {
+    public List<Order> getAllByClientUsername(String clientUsername) {
         List<Order> orders = orderRepository.findAllByClient_Username(clientUsername);
 
         if (orders.isEmpty())
@@ -44,7 +45,7 @@ public class OrderService {
         return orders;
     }
 
-    public List<Order> findAllByGuideUsername(String guideUsername) {
+    public List<Order> getAllByGuideUsername(String guideUsername) {
         List<Order> orders = orderRepository.findAllByGuide_Username(guideUsername);
 
         if (orders.isEmpty())
@@ -57,13 +58,16 @@ public class OrderService {
     public void createOrder(Order order, String clientUsername) {
         User client = userService.getByUsername(clientUsername);
         Tour tour = tourService.getByIdAndGuideUsername(order.getTour().getId(), order.getGuide().getUsername());
-        OrderStatus orderStatus = orderStatusService.getByName("На рассмотрении");
-        LocalDate orderDate = LocalDate.now();
+        User guide = tour.getGuide();
+
+        if (Objects.equals(client, guide))
+            throw new InvalidDataException("Клиент и Гид - один и тот же пользователь");
+
         order.setClient(client);
         order.setTour(tour);
-        order.setGuide(tour.getGuide());
-        order.setStatus(orderStatus);
-        order.setOrderDate(orderDate);
+        order.setGuide(guide);
+        order.setStatus(orderStatusService.getByName("На рассмотрении"));
+        order.setOrderDate(LocalDate.now());
         orderRepository.save(order);
     }
 
@@ -72,7 +76,7 @@ public class OrderService {
         Order order = getByIdAndGuideUsername(orderId, guideUsername);
         OrderStatus status = orderStatusService.getByName("На рассмотрении");
 
-        if (!order.getStatus().equals(status))
+        if (!Objects.equals(order.getStatus(), status))
             throw new InvalidDataException("Заказ уже был рассмотрен");
 
         String statusName = accepted ? "Принят" : "Отклонён";

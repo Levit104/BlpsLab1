@@ -23,7 +23,7 @@ public class OrderGuideController {
     @GetMapping("/users/{username}/available-orders")
     public List<OrderGuideDTO> showAvailableOrders(@PathVariable String username, Principal principal) {
         ValidationUtils.checkAccess(principal.getName(), username);
-        List<Order> orders = orderService.findAllByGuideUsername(username);
+        List<Order> orders = orderService.getAllByGuideUsername(username);
         return mappingUtils.mapList(orders, OrderGuideDTO.class);
     }
 

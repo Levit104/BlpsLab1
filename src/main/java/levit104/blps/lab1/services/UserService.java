@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,13 +24,6 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
-
-    // Чтобы выводить сообщение о том, что пользователь не найден (сообщение у UsernameNotFoundException игнорируется)
-    public User getByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(
-                "Пользователь '%s' не найден".formatted(username)
-        ));
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -43,6 +37,23 @@ public class UserService implements UserDetailsService {
         );
     }
 
+    // Чтобы выводить сообщение о том, что пользователь не найден (сообщение у UsernameNotFoundException игнорируется)
+    public User getByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(
+                "Пользователь '%s' не найден".formatted(username)
+        ));
+    }
+
+    public List<User> getAllByCityNameAndCountryName(String cityName, String countryName) {
+        List<User> guides = userRepository.findAllByTours_City_NameAndTours_City_Country_Name(cityName, countryName);
+
+        if (guides.isEmpty())
+            throw new EntityNotFoundException("Гиды в городе '%s' в стране '%s' не найдены"
+                    .formatted(cityName, countryName));
+
+        return guides;
+    }
+
     @Transactional
     public void registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -52,7 +63,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public String giveGuideRole(String adminName, String username) {
-        if (adminName.equals(username))
+        if (Objects.equals(adminName, username))
             throw new InvalidDataException("Выдача роли администратору");
 
         String roleName = "ROLE_GUIDE";
@@ -66,15 +77,5 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
         return "Роль '%s' успешно выдана".formatted(roleName);
-    }
-
-    public List<User> findAllByCityNameAndCountryName(String cityName, String countryName) {
-        List<User> guides = userRepository.findAllByTours_City_NameAndTours_City_Country_Name(cityName, countryName);
-
-        if (guides.isEmpty())
-            throw new EntityNotFoundException("Гиды в городе '%s' в стране '%s' не найдены"
-                    .formatted(cityName, countryName));
-
-        return guides;
     }
 }
