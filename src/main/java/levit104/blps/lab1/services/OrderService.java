@@ -56,6 +56,7 @@ public class OrderService {
 
     @Transactional
     public void createOrder(Order order, String clientUsername) {
+        order.setId(null); // т.к. ModelMapper неправильно мапит id
         User client = userService.getByUsername(clientUsername);
         Tour tour = tourService.getByIdAndGuideUsername(order.getTour().getId(), order.getGuide().getUsername());
         User guide = tour.getGuide();
