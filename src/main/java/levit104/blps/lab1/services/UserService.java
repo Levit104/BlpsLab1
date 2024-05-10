@@ -55,8 +55,6 @@ public class UserService implements UserDetailsService {
         return guides;
     }
 
-    @Transactional
-    public void registerUser(User user) {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void registerUser(User user, BindingResult bindingResult) {
         if (userRepository.existsByEmail(user.getEmail()))
@@ -70,7 +68,6 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    @Transactional
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public String giveGuideRole(String username) {
         String roleName = "ROLE_GUIDE";
