@@ -1,10 +1,8 @@
 package levit104.blps.lab1.utils;
 
 import levit104.blps.lab1.exceptions.EntityCreationException;
-import levit104.blps.lab1.exceptions.ForbiddenException;
 import org.springframework.validation.BindingResult;
 
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ValidationUtils {
@@ -26,10 +24,5 @@ public class ValidationUtils {
                 .collect(Collectors.joining(";"));
 
         throw new EntityCreationException(errorsString);
-    }
-
-    public static void checkAccess(String expectedUsername, String actualUsername) {
-        if (!Objects.equals(expectedUsername, actualUsername))
-            throw new ForbiddenException("Нет доступа к данной странице");
     }
 }

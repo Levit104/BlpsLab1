@@ -5,9 +5,11 @@ import levit104.blps.lab1.models.main.City;
 import levit104.blps.lab1.models.main.Tour;
 import levit104.blps.lab1.models.main.User;
 import levit104.blps.lab1.repos.main.TourRepository;
+import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
@@ -45,6 +47,11 @@ public class TourService {
 
     @Transactional
     public void add(Tour tour, String guideUsername) {
+    public void add(Tour tour, String guideUsername, BindingResult bindingResult) {
+        if (tourRepository.existsByName(tour.getName()))
+            bindingResult.rejectValue("name", "", ValidationUtils.TOUR_NAME_TAKEN);
+        ValidationUtils.handleCreationErrors(bindingResult);
+
         City city = cityService.getByNameAndCountryName(tour.getCity().getName(), tour.getCity().getCountry().getName());
         User guide = userService.getByUsername(guideUsername);
         tour.setCity(city);

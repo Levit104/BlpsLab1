@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface TourRepository extends JpaRepository<Tour, Long> {
-    Optional<Tour> findByName(String name);
+    boolean existsByName(String name);
 
     Optional<Tour> findByIdAndGuide_Username(Long id, String guideUsername);
 

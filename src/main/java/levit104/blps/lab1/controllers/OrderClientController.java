@@ -6,7 +6,6 @@ import levit104.blps.lab1.dto.OrderCreationDTO;
 import levit104.blps.lab1.models.main.Order;
 import levit104.blps.lab1.services.OrderService;
 import levit104.blps.lab1.utils.MappingUtils;
-import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,9 +45,8 @@ public class OrderClientController {
             @RequestBody @Valid OrderCreationDTO requestDTO,
             BindingResult bindingResult
     ) {
-        ValidationUtils.handleCreationErrors(bindingResult);
         Order order = mappingUtils.mapObject(requestDTO, Order.class);
-        orderService.createOrder(order, username);
+        orderService.createOrder(order, username, bindingResult);
         return mappingUtils.mapObject(order, OrderClientDTO.class);
     }
 }

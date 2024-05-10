@@ -5,6 +5,7 @@ import levit104.blps.lab1.exceptions.InvalidDataException;
 import levit104.blps.lab1.models.main.Role;
 import levit104.blps.lab1.models.main.User;
 import levit104.blps.lab1.repos.main.UserRepository;
+import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.Objects;
@@ -55,6 +57,13 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void registerUser(User user) {
+    public void registerUser(User user, BindingResult bindingResult) {
+        if (userRepository.existsByEmail(user.getEmail()))
+            bindingResult.rejectValue("email", "", ValidationUtils.EMAIL_TAKEN);
+        if (userRepository.findByUsername(user.getUsername()).isPresent())
+            bindingResult.rejectValue("username", "", ValidationUtils.USERNAME_TAKEN);
+        ValidationUtils.handleCreationErrors(bindingResult);
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(List.of(roleService.getByName("ROLE_USER")));
         userRepository.save(user);

@@ -2,19 +2,16 @@ package levit104.blps.lab1.services;
 
 import levit104.blps.lab1.exceptions.EntityNotFoundException;
 import levit104.blps.lab1.exceptions.InvalidDataException;
-import levit104.blps.lab1.models.Order;
-import levit104.blps.lab1.models.OrderStatus;
-import levit104.blps.lab1.models.Tour;
-import levit104.blps.lab1.models.User;
-import levit104.blps.lab1.repos.OrderRepository;
 import levit104.blps.lab1.models.main.Order;
 import levit104.blps.lab1.models.main.OrderStatus;
 import levit104.blps.lab1.models.main.Tour;
 import levit104.blps.lab1.models.main.User;
 import levit104.blps.lab1.repos.main.OrderRepository;
+import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -60,6 +57,9 @@ public class OrderService {
 
     @Transactional
     public void createOrder(Order order, String clientUsername) {
+    public void createOrder(Order order, String clientUsername, BindingResult bindingResult) {
+        ValidationUtils.handleCreationErrors(bindingResult);
+
         order.setId(null); // т.к. ModelMapper неправильно мапит id
         User client = userService.getByUsername(clientUsername);
         Tour tour = tourService.getByIdAndGuideUsername(order.getTour().getId(), order.getGuide().getUsername());

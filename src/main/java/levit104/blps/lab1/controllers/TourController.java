@@ -9,7 +9,6 @@ import levit104.blps.lab1.models.main.User;
 import levit104.blps.lab1.services.TourService;
 import levit104.blps.lab1.services.UserService;
 import levit104.blps.lab1.utils.MappingUtils;
-import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,9 +61,8 @@ public class TourController {
             @RequestBody @Valid TourCreationDTO requestDTO,
             BindingResult bindingResult
     ) {
-        ValidationUtils.handleCreationErrors(bindingResult);
         Tour tour = mappingUtils.mapObject(requestDTO, Tour.class);
-        tourService.add(tour, username);
+        tourService.add(tour, username, bindingResult);
         return mappingUtils.mapObject(tour, TourDTO.class);
     }
 }
