@@ -8,6 +8,7 @@ import levit104.blps.lab1.repos.main.TourRepository;
 import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
@@ -45,8 +46,7 @@ public class TourService {
         return tours;
     }
 
-    @Transactional
-    public void add(Tour tour, String guideUsername) {
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void add(Tour tour, String guideUsername, BindingResult bindingResult) {
         if (tourRepository.existsByName(tour.getName()))
             bindingResult.rejectValue("name", "", ValidationUtils.TOUR_NAME_TAKEN);

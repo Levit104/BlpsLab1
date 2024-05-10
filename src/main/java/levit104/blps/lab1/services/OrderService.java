@@ -10,6 +10,7 @@ import levit104.blps.lab1.repos.main.OrderRepository;
 import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
@@ -55,8 +56,7 @@ public class OrderService {
         return orders;
     }
 
-    @Transactional
-    public void createOrder(Order order, String clientUsername) {
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void createOrder(Order order, String clientUsername, BindingResult bindingResult) {
         ValidationUtils.handleCreationErrors(bindingResult);
 
@@ -76,7 +76,7 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public String changeStatus(Long orderId, String guideUsername, boolean accepted) {
         Order order = getByIdAndGuideUsername(orderId, guideUsername);
         OrderStatus status = orderStatusService.getByName("На рассмотрении");

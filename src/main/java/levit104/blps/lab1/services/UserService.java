@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
@@ -57,6 +58,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void registerUser(User user) {
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void registerUser(User user, BindingResult bindingResult) {
         if (userRepository.existsByEmail(user.getEmail()))
             bindingResult.rejectValue("email", "", ValidationUtils.EMAIL_TAKEN);
@@ -70,6 +72,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public String giveGuideRole(String adminName, String username) {
         if (Objects.equals(adminName, username))
             throw new InvalidDataException("Выдача роли администратору");
