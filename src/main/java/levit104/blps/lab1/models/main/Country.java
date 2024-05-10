@@ -1,4 +1,4 @@
-package levit104.blps.lab1.models;
+package levit104.blps.lab1.models.main;
 
 import jakarta.persistence.*;
 import lombok.Data;

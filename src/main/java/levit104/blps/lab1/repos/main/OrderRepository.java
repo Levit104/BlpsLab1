@@ -1,6 +1,6 @@
-package levit104.blps.lab1.repos;
+package levit104.blps.lab1.repos.main;
 
-import levit104.blps.lab1.models.Order;
+import levit104.blps.lab1.models.main.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

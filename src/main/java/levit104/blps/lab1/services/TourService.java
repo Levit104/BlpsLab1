@@ -1,10 +1,10 @@
 package levit104.blps.lab1.services;
 
 import levit104.blps.lab1.exceptions.EntityNotFoundException;
-import levit104.blps.lab1.models.City;
-import levit104.blps.lab1.models.Tour;
-import levit104.blps.lab1.models.User;
-import levit104.blps.lab1.repos.TourRepository;
+import levit104.blps.lab1.models.main.City;
+import levit104.blps.lab1.models.main.Tour;
+import levit104.blps.lab1.models.main.User;
+import levit104.blps.lab1.repos.main.TourRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

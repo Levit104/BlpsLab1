@@ -3,7 +3,7 @@ package levit104.blps.lab1.controllers;
 import jakarta.validation.Valid;
 import levit104.blps.lab1.dto.OrderClientDTO;
 import levit104.blps.lab1.dto.OrderCreationDTO;
-import levit104.blps.lab1.models.Order;
+import levit104.blps.lab1.models.main.Order;
 import levit104.blps.lab1.services.OrderService;
 import levit104.blps.lab1.utils.MappingUtils;
 import levit104.blps.lab1.utils.ValidationUtils;

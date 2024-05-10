@@ -1,7 +1,7 @@
 package levit104.blps.lab1.controllers;
 
 import levit104.blps.lab1.dto.OrderGuideDTO;
-import levit104.blps.lab1.models.Order;
+import levit104.blps.lab1.models.main.Order;
 import levit104.blps.lab1.services.OrderService;
 import levit104.blps.lab1.utils.MappingUtils;
 import levit104.blps.lab1.utils.ValidationUtils;

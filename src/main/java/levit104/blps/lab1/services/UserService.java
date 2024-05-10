@@ -2,9 +2,9 @@ package levit104.blps.lab1.services;
 
 import levit104.blps.lab1.exceptions.EntityNotFoundException;
 import levit104.blps.lab1.exceptions.InvalidDataException;
-import levit104.blps.lab1.models.Role;
-import levit104.blps.lab1.models.User;
-import levit104.blps.lab1.repos.UserRepository;
+import levit104.blps.lab1.models.main.Role;
+import levit104.blps.lab1.models.main.User;
+import levit104.blps.lab1.repos.main.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
