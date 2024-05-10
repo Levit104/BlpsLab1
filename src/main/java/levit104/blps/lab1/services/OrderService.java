@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;

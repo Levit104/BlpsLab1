@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
