@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -73,10 +72,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public String giveGuideRole(String adminName, String username) {
-        if (Objects.equals(adminName, username))
-            throw new InvalidDataException("Выдача роли администратору");
-
+    public String giveGuideRole(String username) {
         String roleName = "ROLE_GUIDE";
         User user = getByUsername(username);
         Role role = roleService.getByName(roleName);

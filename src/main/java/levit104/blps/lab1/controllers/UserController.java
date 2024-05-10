@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
-
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -27,9 +25,9 @@ public class UserController {
     }
 
     // Выдача роли Гида
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') && principal.username != #username")
     @PatchMapping("/users/{username}/add-privilege")
-    public String addGuidePrivilege(@PathVariable String username, Principal principal) {
-        return userService.giveGuideRole(principal.getName(), username);
+    public String addGuidePrivilege(@PathVariable String username) {
+        return userService.giveGuideRole(username);
     }
 }
