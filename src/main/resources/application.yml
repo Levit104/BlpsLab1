@@ -8,9 +8,10 @@ spring:
     datasource:
         driverClassName: org.postgresql.Driver
         url: jdbc:postgresql://localhost:5432/blps
+        secondary-url: jdbc:postgresql://localhost:5432/stupid_db
         username: postgres
         password: qwerty123
-    jpa:
-        hibernate:
-            ddl-auto: update
-        show-sql: true
+#    jpa:
+#        hibernate:
+#            ddl-auto: update
+#        show-sql: true
