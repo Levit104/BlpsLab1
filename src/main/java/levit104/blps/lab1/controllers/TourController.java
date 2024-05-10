@@ -16,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -55,14 +54,14 @@ public class TourController {
     }
 
     // Добавить экскурсию
-    @PreAuthorize("hasRole('GUIDE')")
+    @PreAuthorize("hasRole('GUIDE') && principal.username == #username")
     @PostMapping("/users/{username}/tours")
     @ResponseStatus(HttpStatus.CREATED)
-    public TourDTO addTour(@PathVariable String username,
-                           @RequestBody @Valid TourCreationDTO requestDTO,
-                           BindingResult bindingResult,
-                           Principal principal) {
-        ValidationUtils.checkAccess(principal.getName(), username);
+    public TourDTO addTour(
+            @PathVariable String username,
+            @RequestBody @Valid TourCreationDTO requestDTO,
+            BindingResult bindingResult
+    ) {
         ValidationUtils.handleCreationErrors(bindingResult);
         Tour tour = mappingUtils.mapObject(requestDTO, Tour.class);
         tourService.add(tour, username);

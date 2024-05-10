@@ -13,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -23,32 +22,30 @@ public class OrderClientController {
     private final OrderService orderService;
 
     // Заказы клиента
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') && principal.username == #username")
     @GetMapping("/users/{username}/orders")
-    public List<OrderClientDTO> showOrders(@PathVariable String username, Principal principal) {
-        ValidationUtils.checkAccess(principal.getName(), username);
+    public List<OrderClientDTO> showOrders(@PathVariable String username) {
         List<Order> orders = orderService.getAllByClientUsername(username);
         return mappingUtils.mapList(orders, OrderClientDTO.class);
     }
 
     // Конкретный заказ клиента
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') && principal.username == #username")
     @GetMapping("/users/{username}/orders/{id}")
-    public OrderClientDTO showOrderInfo(@PathVariable String username, @PathVariable Long id, Principal principal) {
-        ValidationUtils.checkAccess(principal.getName(), username);
+    public OrderClientDTO showOrderInfo(@PathVariable String username, @PathVariable Long id) {
         Order order = orderService.getByIdAndClientUsername(id, username);
         return mappingUtils.mapObject(order, OrderClientDTO.class);
     }
 
     // Создать заказ
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') && principal.username == #username")
     @PostMapping("/users/{username}/orders")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderClientDTO createOrder(@PathVariable String username,
-                                      @RequestBody @Valid OrderCreationDTO requestDTO,
-                                      BindingResult bindingResult,
-                                      Principal principal) {
-        ValidationUtils.checkAccess(principal.getName(), username);
+    public OrderClientDTO createOrder(
+            @PathVariable String username,
+            @RequestBody @Valid OrderCreationDTO requestDTO,
+            BindingResult bindingResult
+    ) {
         ValidationUtils.handleCreationErrors(bindingResult);
         Order order = mappingUtils.mapObject(requestDTO, Order.class);
         orderService.createOrder(order, username);
