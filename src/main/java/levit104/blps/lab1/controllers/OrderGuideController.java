@@ -5,6 +5,7 @@ import levit104.blps.lab1.models.main.Order;
 import levit104.blps.lab1.services.OrderService;
 import levit104.blps.lab1.utils.MappingUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +20,11 @@ public class OrderGuideController {
     // Заказы для гида
     @PreAuthorize("hasRole('GUIDE') && principal.username == #username")
     @GetMapping("/users/{username}/available-orders")
-    public List<OrderGuideDTO> showAvailableOrders(@PathVariable String username) {
-        List<Order> orders = orderService.getAllByGuideUsername(username);
+    public List<OrderGuideDTO> showAvailableOrders(
+            @PathVariable String username,
+            Pageable pageable
+    ) {
+        List<Order> orders = orderService.getAllByGuideUsername(username, pageable);
         return mappingUtils.mapList(orders, OrderGuideDTO.class);
     }
 

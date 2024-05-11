@@ -9,6 +9,7 @@ import levit104.blps.lab1.models.main.User;
 import levit104.blps.lab1.repos.main.OrderRepository;
 import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +40,8 @@ public class OrderService {
         ));
     }
 
-    public List<Order> getAllByClientUsername(String clientUsername) {
-        List<Order> orders = orderRepository.findAllByClient_Username(clientUsername);
+    public List<Order> getAllByClientUsername(String clientUsername, Pageable pageable) {
+        List<Order> orders = orderRepository.findAllByClient_Username(clientUsername, pageable);
 
         if (orders.isEmpty())
             throw new EntityNotFoundException("Заказы у '%s' не найдены".formatted(clientUsername));
@@ -48,8 +49,8 @@ public class OrderService {
         return orders;
     }
 
-    public List<Order> getAllByGuideUsername(String guideUsername) {
-        List<Order> orders = orderRepository.findAllByGuide_Username(guideUsername);
+    public List<Order> getAllByGuideUsername(String guideUsername, Pageable pageable) {
+        List<Order> orders = orderRepository.findAllByGuide_Username(guideUsername, pageable);
 
         if (orders.isEmpty())
             throw new EntityNotFoundException("Заказы для '%s' не найдены".formatted(guideUsername));

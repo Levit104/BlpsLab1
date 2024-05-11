@@ -7,6 +7,7 @@ import levit104.blps.lab1.models.main.User;
 import levit104.blps.lab1.repos.main.UserRepository;
 import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -46,8 +47,8 @@ public class UserService implements UserDetailsService {
         ));
     }
 
-    public List<User> getAllByCityNameAndCountryName(String cityName, String countryName) {
-        List<User> guides = userRepository.findAllByTours_City_NameAndTours_City_Country_Name(cityName, countryName);
+    public List<User> getAllByCityNameAndCountryName(String cityName, String countryName, Pageable pageable) {
+        List<User> guides = userRepository.findAllByTours_City_NameAndTours_City_Country_Name(cityName, countryName, pageable);
 
         if (guides.isEmpty())
             throw new EntityNotFoundException("Гиды в городе '%s' в стране '%s' не найдены"

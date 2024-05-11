@@ -10,6 +10,7 @@ import levit104.blps.lab1.services.TourService;
 import levit104.blps.lab1.services.UserService;
 import levit104.blps.lab1.utils.MappingUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -26,22 +27,31 @@ public class TourController {
 
     // Экскурсии в городе
     @GetMapping("/tours")
-    public List<TourDTO> showToursInCity(@RequestParam String country, @RequestParam String city) {
-        List<Tour> tours = tourService.getAllByCityNameAndCountryName(city, country);
+    public List<TourDTO> showToursInCity(
+            @RequestParam String country, @RequestParam String city,
+            Pageable pageable
+    ) {
+        List<Tour> tours = tourService.getAllByCityNameAndCountryName(city, country, pageable);
         return mappingUtils.mapList(tours, TourDTO.class);
     }
 
     // Гиды в городе
     @GetMapping("/guides")
-    public List<UserDTO> showGuidesInCity(@RequestParam String country, @RequestParam String city) {
-        List<User> guides = userService.getAllByCityNameAndCountryName(city, country);
+    public List<UserDTO> showGuidesInCity(
+            @RequestParam String country, @RequestParam String city,
+            Pageable pageable
+    ) {
+        List<User> guides = userService.getAllByCityNameAndCountryName(city, country, pageable);
         return mappingUtils.mapList(guides, UserDTO.class);
     }
 
     // Экскурсии гида
     @GetMapping("/users/{username}/tours")
-    public List<TourDTO> showGuideTours(@PathVariable String username) {
-        List<Tour> tours = tourService.getAllByGuideUsername(username);
+    public List<TourDTO> showGuideTours(
+            @PathVariable String username,
+            Pageable pageable
+    ) {
+        List<Tour> tours = tourService.getAllByGuideUsername(username, pageable);
         return mappingUtils.mapList(tours, TourDTO.class);
     }
 

@@ -1,6 +1,7 @@
 package levit104.blps.lab1.repos.main;
 
 import levit104.blps.lab1.models.main.Order;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Optional<Order> findByIdAndGuide_Username(Long id, String guideUsername);
 
-    List<Order> findAllByClient_Username(String clientUsername);
+    List<Order> findAllByClient_Username(String clientUsername, Pageable pageable);
 
-    List<Order> findAllByGuide_Username(String guideUsername);
+    List<Order> findAllByGuide_Username(String guideUsername, Pageable pageable);
 }

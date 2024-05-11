@@ -7,6 +7,7 @@ import levit104.blps.lab1.models.main.User;
 import levit104.blps.lab1.repos.main.TourRepository;
 import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +29,8 @@ public class TourService {
         ));
     }
 
-    public List<Tour> getAllByGuideUsername(String guideUsername) {
-        List<Tour> tours = tourRepository.findAllByGuide_Username(guideUsername);
+    public List<Tour> getAllByGuideUsername(String guideUsername, Pageable pageable) {
+        List<Tour> tours = tourRepository.findAllByGuide_Username(guideUsername, pageable);
 
         if (tours.isEmpty())
             throw new EntityNotFoundException("Экскурсии у '%s' не найдены".formatted(guideUsername));
@@ -37,8 +38,8 @@ public class TourService {
         return tours;
     }
 
-    public List<Tour> getAllByCityNameAndCountryName(String cityName, String countryName) {
-        List<Tour> tours = tourRepository.findAllByCity_NameAndCity_Country_Name(cityName, countryName);
+    public List<Tour> getAllByCityNameAndCountryName(String cityName, String countryName, Pageable pageable) {
+        List<Tour> tours = tourRepository.findAllByCity_NameAndCity_Country_Name(cityName, countryName, pageable);
 
         if (tours.isEmpty())
             throw new EntityNotFoundException("Экскурсии в городе '%s' в стране '%s' не найдены"

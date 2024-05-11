@@ -7,6 +7,7 @@ import levit104.blps.lab1.models.main.Order;
 import levit104.blps.lab1.services.OrderService;
 import levit104.blps.lab1.utils.MappingUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -23,8 +24,11 @@ public class OrderClientController {
     // Заказы клиента
     @PreAuthorize("hasRole('USER') && principal.username == #username")
     @GetMapping("/users/{username}/orders")
-    public List<OrderClientDTO> showOrders(@PathVariable String username) {
-        List<Order> orders = orderService.getAllByClientUsername(username);
+    public List<OrderClientDTO> showOrders(
+            @PathVariable String username,
+            Pageable pageable
+    ) {
+        List<Order> orders = orderService.getAllByClientUsername(username, pageable);
         return mappingUtils.mapList(orders, OrderClientDTO.class);
     }
 
