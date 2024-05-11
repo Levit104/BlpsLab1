@@ -28,6 +28,7 @@ public class UserService implements UserDetailsService {
     private final RoleService roleService;
     private final NotificationService notificationService;
 
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
