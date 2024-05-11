@@ -25,6 +25,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final NotificationService notificationService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -66,6 +67,8 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(List.of(roleService.getByName("ROLE_USER")));
         userRepository.save(user);
+
+        notificationService.createNotification("Пользователь %d зарегистрирован".formatted(user.getId()), user.getUsername());
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -80,6 +83,8 @@ public class UserService implements UserDetailsService {
         user.getRoles().add(role);
         userRepository.save(user);
 
-        return "Роль '%s' успешно выдана".formatted(roleName);
+        String message = "Роль '%s' успешно выдана".formatted(roleName);
+        notificationService.createNotification(message, "admin");
+        return message;
     }
 }

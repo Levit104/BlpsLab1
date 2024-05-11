@@ -6,9 +6,7 @@ import levit104.blps.lab1.models.main.Order;
 import levit104.blps.lab1.models.main.OrderStatus;
 import levit104.blps.lab1.models.main.Tour;
 import levit104.blps.lab1.models.main.User;
-import levit104.blps.lab1.models.secondary.Notification;
 import levit104.blps.lab1.repos.main.OrderRepository;
-import levit104.blps.lab1.repos.secondary.NotificationRepository;
 import levit104.blps.lab1.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +25,7 @@ public class OrderService {
     private final OrderStatusService orderStatusService;
     private final UserService userService;
     private final TourService tourService;
-    private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
 
     public Order getByIdAndClientUsername(Long id, String clientUsername) {
         return orderRepository.findByIdAndClient_Username(id, clientUsername).orElseThrow(() -> new EntityNotFoundException(
@@ -79,11 +76,7 @@ public class OrderService {
         order.setOrderDate(LocalDate.now());
         orderRepository.save(order);
 
-        Notification notification = new Notification();
-        notification.setMessage("Заказ %d создан".formatted(order.getId()));
-        notification.setUsername(clientUsername);
-        notification.setTime(LocalDateTime.now());
-        notificationRepository.save(notification);
+        notificationService.createNotification("Заказ %d создан".formatted(order.getId()), clientUsername);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -98,6 +91,8 @@ public class OrderService {
         order.setStatus(orderStatusService.getByName(statusName));
         orderRepository.save(order);
 
-        return "Статус заказа изменён на '%s'".formatted(statusName);
+        String message = "Статус заказа изменён на '%s'".formatted(statusName);
+        notificationService.createNotification(message, guideUsername);
+        return message;
     }
 }

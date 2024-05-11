@@ -20,6 +20,7 @@ public class TourService {
     private final TourRepository tourRepository;
     private final CityService cityService;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     public Tour getByIdAndGuideUsername(Long id, String guideUsername) {
         return tourRepository.findByIdAndGuide_Username(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
@@ -57,5 +58,7 @@ public class TourService {
         tour.setCity(city);
         tour.setGuide(guide);
         tourRepository.save(tour);
+
+        notificationService.createNotification("Экскурсия %d создана".formatted(tour.getId()), guideUsername);
     }
 }
