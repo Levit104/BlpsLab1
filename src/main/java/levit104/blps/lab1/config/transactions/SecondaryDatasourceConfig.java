@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.sql.DataSource;
-import java.util.Map;
 
 @Configuration
 @EnableJpaRepositories(
@@ -29,12 +28,10 @@ public class SecondaryDatasourceConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean secondaryEntityManagerFactory(
             EntityManagerFactoryBuilder builder,
-            @Qualifier("secondaryDataSource") DataSource dataSource,
-            Map<String, String> jpaProperties
+            @Qualifier("secondaryDataSource") DataSource dataSource
     ) {
         return builder
                 .dataSource(dataSource)
-                .properties(jpaProperties)
                 .jta(true)
                 .persistenceUnit("secondary_pu")
                 .packages("levit104.blps.lab1.models.secondary")
