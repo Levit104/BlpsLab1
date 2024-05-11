@@ -24,3 +24,13 @@ spring:
                         url: jdbc:postgresql://localhost:5432/stupid_db
                         user: postgres
                         password: qwerty123
+
+hibernate:
+    connection:
+        handling_mode: DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT
+    hbm2ddl:
+        auto: update
+    show_sql: false
+    format_sql: false
+    physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    implicit_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
