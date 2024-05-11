@@ -5,13 +5,22 @@ server:
 spring:
     application:
         name: BlpsLab1
-    datasource:
-        driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/blps
-        secondary-url: jdbc:postgresql://localhost:5432/stupid_db
-        username: postgres
-        password: qwerty123
-#    jpa:
-#        hibernate:
-#            ddl-auto: update
-#        show-sql: true
+    jta:
+        atomikos:
+            datasource:
+                main:
+                    max-pool-size: 10
+                    unique-resource-name: main
+                    xa-data-source-class-name: org.postgresql.xa.PGXADataSource
+                    xa-properties:
+                        url: jdbc:postgresql://localhost:5432/blps
+                        user: postgres
+                        password: qwerty123
+                secondary:
+                    max-pool-size: 10
+                    unique-resource-name: secondary
+                    xa-data-source-class-name: org.postgresql.xa.PGXADataSource
+                    xa-properties:
+                        url: jdbc:postgresql://localhost:5432/stupid_db
+                        user: postgres
+                        password: qwerty123

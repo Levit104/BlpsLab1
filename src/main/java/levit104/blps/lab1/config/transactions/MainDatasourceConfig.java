@@ -1,57 +1,46 @@
 package levit104.blps.lab1.config.transactions;
 
 import com.atomikos.spring.AtomikosDataSourceBean;
-import org.postgresql.xa.PGXADataSource;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
-import java.io.IOException;
-import java.util.Properties;
+import javax.sql.DataSource;
+import java.util.Map;
 
 @Configuration
 @EnableJpaRepositories(
         basePackages = "levit104.blps.lab1.repos.main",
-        entityManagerFactoryRef = "mainEntityManager"
+        entityManagerFactoryRef = "mainEntityManagerFactory",
+        transactionManagerRef = "jtaTransactionManager"
 )
 public class MainDatasourceConfig {
-    @Value("${spring.datasource.url}")
-    private String dbUrl;
-    @Value("${spring.datasource.username}")
-    private String dbUsername;
-    @Value("${spring.datasource.password}")
-    private String dbPassword;
 
+    @Primary
     @Bean(initMethod = "init", destroyMethod = "close")
+    @ConfigurationProperties("spring.jta.atomikos.datasource.main")
     public AtomikosDataSourceBean mainDataSource() {
-        PGXADataSource xaDataSource = new PGXADataSource();
-        xaDataSource.setUrl(dbUrl);
-        xaDataSource.setUser(dbUsername);
-        xaDataSource.setPassword(dbPassword);
-
-        AtomikosDataSourceBean dataSourceBean = new AtomikosDataSourceBean();
-        dataSourceBean.setXaDataSource(xaDataSource);
-        dataSourceBean.setUniqueResourceName("main_db");
-        dataSourceBean.setMaxPoolSize(10);
-
-        return dataSourceBean;
+        return new AtomikosDataSourceBean();
     }
 
+    @Primary
     @Bean
-    public LocalContainerEntityManagerFactoryBean mainEntityManager() throws IOException {
-        Properties jpaProperties = new Properties();
-        jpaProperties.load(ClassLoader.getSystemClassLoader().getResourceAsStream("hibernate.properties"));
-
-        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-        factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        factory.setJtaDataSource(mainDataSource());
-        factory.setPackagesToScan("levit104.blps.lab1.models.main");
-        factory.setPersistenceUnitName("postgres");
-        factory.setJpaProperties(jpaProperties);
-
-        return factory;
+    public LocalContainerEntityManagerFactoryBean mainEntityManagerFactory(
+            EntityManagerFactoryBuilder builder,
+            @Qualifier("mainDataSource") DataSource dataSource,
+            Map<String, String> jpaProperties
+    ) {
+        return builder
+                .dataSource(dataSource)
+                .properties(jpaProperties)
+                .jta(true)
+                .persistenceUnit("main_pu")
+                .packages("levit104.blps.lab1.models.main")
+                .build();
     }
 }
