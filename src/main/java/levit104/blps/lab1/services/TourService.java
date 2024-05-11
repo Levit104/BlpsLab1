@@ -49,9 +49,7 @@ public class TourService {
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void add(Tour tour, String guideUsername, BindingResult bindingResult) {
-        if (tourRepository.existsByName(tour.getName()))
-            bindingResult.rejectValue("name", "", ValidationUtils.TOUR_NAME_TAKEN);
-        ValidationUtils.handleCreationErrors(bindingResult);
+        validateTour(tour, bindingResult);
 
         City city = cityService.getByNameAndCountryName(tour.getCity().getName(), tour.getCity().getCountry().getName());
         User guide = userService.getByUsername(guideUsername);
@@ -60,5 +58,11 @@ public class TourService {
         tourRepository.save(tour);
 
         notificationService.createNotification("Экскурсия %d создана".formatted(tour.getId()), guideUsername);
+    }
+
+    private void validateTour(Tour tour, BindingResult bindingResult) {
+        if (tourRepository.existsByName(tour.getName()))
+            bindingResult.rejectValue("name", "", ValidationUtils.TOUR_NAME_TAKEN);
+        ValidationUtils.handleCreationErrors(bindingResult);
     }
 }

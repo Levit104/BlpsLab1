@@ -58,11 +58,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void registerUser(User user, BindingResult bindingResult) {
-        if (userRepository.existsByEmail(user.getEmail()))
-            bindingResult.rejectValue("email", "", ValidationUtils.EMAIL_TAKEN);
-        if (userRepository.findByUsername(user.getUsername()).isPresent())
-            bindingResult.rejectValue("username", "", ValidationUtils.USERNAME_TAKEN);
-        ValidationUtils.handleCreationErrors(bindingResult);
+        validateUser(user, bindingResult);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(List.of(roleService.getByName("ROLE_USER")));
@@ -86,5 +82,13 @@ public class UserService implements UserDetailsService {
         String message = "Роль '%s' успешно выдана".formatted(roleName);
         notificationService.createNotification(message, "admin");
         return message;
+    }
+
+    private void validateUser(User user, BindingResult bindingResult) {
+        if (userRepository.existsByEmail(user.getEmail()))
+            bindingResult.rejectValue("email", "", ValidationUtils.EMAIL_TAKEN);
+        if (userRepository.findByUsername(user.getUsername()).isPresent())
+            bindingResult.rejectValue("username", "", ValidationUtils.USERNAME_TAKEN);
+        ValidationUtils.handleCreationErrors(bindingResult);
     }
 }
