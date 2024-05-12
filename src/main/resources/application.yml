@@ -31,7 +31,7 @@ spring:
                     handling_mode: DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT
                 hbm2ddl:
                     auto: update
-                show_sql: false
+                show_sql: true
                 format_sql: false
                 physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
                 implicit_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy

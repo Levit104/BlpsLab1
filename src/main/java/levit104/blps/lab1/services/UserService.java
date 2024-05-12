@@ -89,7 +89,7 @@ public class UserService implements UserDetailsService {
     private void validateUser(User user, BindingResult bindingResult) {
         if (userRepository.existsByEmail(user.getEmail()))
             bindingResult.rejectValue("email", "", ValidationUtils.EMAIL_TAKEN);
-        if (userRepository.findByUsername(user.getUsername()).isPresent())
+        if (userRepository.existsByUsername(user.getUsername()))
             bindingResult.rejectValue("username", "", ValidationUtils.USERNAME_TAKEN);
         ValidationUtils.handleCreationErrors(bindingResult);
     }
