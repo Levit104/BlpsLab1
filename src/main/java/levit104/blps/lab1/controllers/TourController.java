@@ -11,6 +11,8 @@ import levit104.blps.lab1.services.UserService;
 import levit104.blps.lab1.utils.MappingUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -28,8 +30,9 @@ public class TourController {
     // Экскурсии в городе
     @GetMapping("/tours")
     public List<TourDTO> showToursInCity(
-            @RequestParam String country, @RequestParam String city,
-            Pageable pageable
+            @RequestParam String country,
+            @RequestParam String city,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         List<Tour> tours = tourService.getAllByCityNameAndCountryName(city, country, pageable);
         return mappingUtils.mapList(tours, TourDTO.class);
@@ -38,8 +41,9 @@ public class TourController {
     // Гиды в городе
     @GetMapping("/guides")
     public List<UserDTO> showGuidesInCity(
-            @RequestParam String country, @RequestParam String city,
-            Pageable pageable
+            @RequestParam String country,
+            @RequestParam String city,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         List<User> guides = userService.getAllByCityNameAndCountryName(city, country, pageable);
         return mappingUtils.mapList(guides, UserDTO.class);
@@ -49,7 +53,7 @@ public class TourController {
     @GetMapping("/users/{username}/tours")
     public List<TourDTO> showGuideTours(
             @PathVariable String username,
-            Pageable pageable
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         List<Tour> tours = tourService.getAllByGuideUsername(username, pageable);
         return mappingUtils.mapList(tours, TourDTO.class);
