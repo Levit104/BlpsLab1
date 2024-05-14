@@ -1,7 +1,7 @@
 package levit104.blss.labs.controllers;
 
 import levit104.blss.labs.dto.UserDTO;
-import levit104.blss.labs.models.main.User;
+import levit104.blss.labs.models.primary.User;
 import levit104.blss.labs.services.UserService;
 import levit104.blss.labs.utils.MappingHelper;
 import lombok.RequiredArgsConstructor;

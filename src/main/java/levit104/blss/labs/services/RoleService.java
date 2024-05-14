@@ -1,8 +1,8 @@
 package levit104.blss.labs.services;
 
 import levit104.blss.labs.exceptions.EntityNotFoundException;
-import levit104.blss.labs.models.main.Role;
-import levit104.blss.labs.repos.main.RoleRepository;
+import levit104.blss.labs.models.primary.Role;
+import levit104.blss.labs.repos.primary.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

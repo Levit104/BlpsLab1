@@ -2,9 +2,9 @@ package levit104.blss.labs.services;
 
 import levit104.blss.labs.exceptions.EntityNotFoundException;
 import levit104.blss.labs.exceptions.InvalidDataException;
-import levit104.blss.labs.models.main.Role;
-import levit104.blss.labs.models.main.User;
-import levit104.blss.labs.repos.main.UserRepository;
+import levit104.blss.labs.models.primary.Role;
+import levit104.blss.labs.models.primary.User;
+import levit104.blss.labs.repos.primary.UserRepository;
 import levit104.blss.labs.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

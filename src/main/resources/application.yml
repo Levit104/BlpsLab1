@@ -8,9 +8,9 @@ spring:
     jta:
         atomikos:
             datasource:
-                main:
+                primary:
                     max-pool-size: 10
-                    unique-resource-name: main
+                    unique-resource-name: primary
                     xa-data-source-class-name: org.postgresql.xa.PGXADataSource
                     xa-properties:
                         url: jdbc:postgresql://localhost:5432/blps

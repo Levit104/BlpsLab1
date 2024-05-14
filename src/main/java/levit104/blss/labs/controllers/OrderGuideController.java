@@ -1,7 +1,7 @@
 package levit104.blss.labs.controllers;
 
 import levit104.blss.labs.dto.OrderGuideDTO;
-import levit104.blss.labs.models.main.Order;
+import levit104.blss.labs.models.primary.Order;
 import levit104.blss.labs.services.OrderService;
 import levit104.blss.labs.utils.MappingHelper;
 import lombok.RequiredArgsConstructor;

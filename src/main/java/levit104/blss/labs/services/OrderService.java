@@ -2,11 +2,11 @@ package levit104.blss.labs.services;
 
 import levit104.blss.labs.exceptions.EntityNotFoundException;
 import levit104.blss.labs.exceptions.InvalidDataException;
-import levit104.blss.labs.models.main.Order;
-import levit104.blss.labs.models.main.OrderStatus;
-import levit104.blss.labs.models.main.Tour;
-import levit104.blss.labs.models.main.User;
-import levit104.blss.labs.repos.main.OrderRepository;
+import levit104.blss.labs.models.primary.Order;
+import levit104.blss.labs.models.primary.OrderStatus;
+import levit104.blss.labs.models.primary.Tour;
+import levit104.blss.labs.models.primary.User;
+import levit104.blss.labs.repos.primary.OrderRepository;
 import levit104.blss.labs.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

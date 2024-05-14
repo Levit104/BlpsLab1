@@ -1,19 +1,19 @@
 {
   "properties": [
     {
-      "name": "spring.jta.atomikos.datasource.main.xa-properties.url",
+      "name": "spring.jta.atomikos.datasource.primary.xa-properties.url",
       "type": "java.lang.String",
-      "description": "Description for spring.jta.atomikos.datasource.main.xa-properties.url."
+      "description": "Description for spring.jta.atomikos.datasource.primary.xa-properties.url."
     },
     {
-      "name": "spring.jta.atomikos.datasource.main.xa-properties.user",
+      "name": "spring.jta.atomikos.datasource.primary.xa-properties.user",
       "type": "java.lang.String",
-      "description": "Description for spring.jta.atomikos.datasource.main.xa-properties.user."
+      "description": "Description for spring.jta.atomikos.datasource.primary.xa-properties.user."
     },
     {
-      "name": "spring.jta.atomikos.datasource.main.xa-properties.password",
+      "name": "spring.jta.atomikos.datasource.primary.xa-properties.password",
       "type": "java.lang.String",
-      "description": "Description for spring.jta.atomikos.datasource.main.xa-properties.password."
+      "description": "Description for spring.jta.atomikos.datasource.primary.xa-properties.password."
     },
     {
       "name": "spring.jta.atomikos.datasource.secondary.xa-properties.url",

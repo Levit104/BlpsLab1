@@ -1,6 +1,6 @@
-package levit104.blss.labs.repos.main;
+package levit104.blss.labs.repos.primary;
 
-import levit104.blss.labs.models.main.City;
+import levit104.blss.labs.models.primary.City;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

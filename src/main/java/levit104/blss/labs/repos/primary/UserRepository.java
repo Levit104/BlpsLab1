@@ -1,6 +1,6 @@
-package levit104.blss.labs.repos.main;
+package levit104.blss.labs.repos.primary;
 
-import levit104.blss.labs.models.main.User;
+import levit104.blss.labs.models.primary.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

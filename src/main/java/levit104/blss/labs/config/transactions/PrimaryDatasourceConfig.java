@@ -14,29 +14,29 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = "levit104.blss.labs.repos.main",
-        entityManagerFactoryRef = "mainEntityManagerFactory"
+        basePackages = "levit104.blss.labs.repos.primary",
+        entityManagerFactoryRef = "primaryEntityManagerFactory"
 )
-public class MainDatasourceConfig {
+public class PrimaryDatasourceConfig {
 
     @Primary
     @Bean(initMethod = "init", destroyMethod = "close")
-    @ConfigurationProperties("spring.jta.atomikos.datasource.main")
-    public AtomikosDataSourceBean mainDataSource() {
+    @ConfigurationProperties("spring.jta.atomikos.datasource.primary")
+    public AtomikosDataSourceBean primaryDataSource() {
         return new AtomikosDataSourceBean();
     }
 
     @Primary
     @Bean
-    public LocalContainerEntityManagerFactoryBean mainEntityManagerFactory(
-            EntityManagerFactoryBuilder builder,
-            @Qualifier("mainDataSource") DataSource dataSource
+    public LocalContainerEntityManagerFactoryBean primaryEntityManagerFactory(
+            EntityManagerFactoryBuilder factoryBuilder,
+            @Qualifier("primaryDataSource") DataSource dataSource
     ) {
-        return builder
+        return factoryBuilder
                 .dataSource(dataSource)
                 .jta(true)
                 .persistenceUnit("main_pu")
-                .packages("levit104.blss.labs.models.main")
+                .packages("levit104.blss.labs.models.primary")
                 .build();
     }
 }

@@ -3,7 +3,7 @@ package levit104.blss.labs.controllers;
 import jakarta.validation.Valid;
 import levit104.blss.labs.dto.OrderClientDTO;
 import levit104.blss.labs.dto.OrderCreationDTO;
-import levit104.blss.labs.models.main.Order;
+import levit104.blss.labs.models.primary.Order;
 import levit104.blss.labs.services.OrderService;
 import levit104.blss.labs.utils.MappingHelper;
 import lombok.RequiredArgsConstructor;

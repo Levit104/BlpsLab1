@@ -1,10 +1,10 @@
 package levit104.blss.labs.services;
 
 import levit104.blss.labs.exceptions.EntityNotFoundException;
-import levit104.blss.labs.models.main.City;
-import levit104.blss.labs.models.main.Tour;
-import levit104.blss.labs.models.main.User;
-import levit104.blss.labs.repos.main.TourRepository;
+import levit104.blss.labs.models.primary.City;
+import levit104.blss.labs.models.primary.Tour;
+import levit104.blss.labs.models.primary.User;
+import levit104.blss.labs.repos.primary.TourRepository;
 import levit104.blss.labs.utils.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

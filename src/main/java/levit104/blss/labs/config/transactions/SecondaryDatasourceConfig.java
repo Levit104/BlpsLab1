@@ -26,10 +26,10 @@ public class SecondaryDatasourceConfig {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean secondaryEntityManagerFactory(
-            EntityManagerFactoryBuilder builder,
+            EntityManagerFactoryBuilder factoryBuilder,
             @Qualifier("secondaryDataSource") DataSource dataSource
     ) {
-        return builder
+        return factoryBuilder
                 .dataSource(dataSource)
                 .jta(true)
                 .persistenceUnit("secondary_pu")
