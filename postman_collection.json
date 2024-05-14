@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "d0705423-a7a0-4ae9-895d-07dba2be5f0e",
-		"name": "BlpsLab1",
+		"name": "blss-labs",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "25614678"
 	},
@@ -59,7 +59,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:10480/tours?country=Италия&city=Венеция",
+					"raw": "localhost:10480/tours?country=Италия&city=Рим",
 					"host": [
 						"localhost"
 					],
@@ -74,7 +74,7 @@
 						},
 						{
 							"key": "city",
-							"value": "Венеция"
+							"value": "Рим"
 						}
 					]
 				}
@@ -129,7 +129,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"firstName\": \"\",\r\n    \"lastName\": \"\",\r\n    \"email\": \"\",\r\n    \"username\": \"\",\r\n    \"password\": \"\"\r\n}",
+					"raw": "{\r\n    \"firstName\": \"Петров\",\r\n    \"lastName\": \"Иван\",\r\n    \"email\": \"user_1@mail.com\",\r\n    \"username\": \"user_1\",\r\n    \"password\": \"12345\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -148,101 +148,7 @@
 					]
 				}
 			},
-			"response": [
-				{
-					"name": "Регистрация",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Иван\",\r\n    \"lastName\": \"Петров\",\r\n    \"email\": \"test@mail.com\",\r\n    \"username\": \"user_1\",\r\n    \"password\": \"12345\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:10480/auth/registration",
-							"host": [
-								"localhost"
-							],
-							"port": "10480",
-							"path": [
-								"auth",
-								"registration"
-							]
-						}
-					},
-					"_postman_previewlanguage": null,
-					"header": null,
-					"cookie": [],
-					"body": null
-				},
-				{
-					"name": "Регистрация",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Сергей\",\r\n    \"lastName\": \"Иванов\",\r\n    \"email\": \"test3@main.com\",\r\n    \"username\": \"guide_1\",\r\n    \"password\": \"12345\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:10480/auth/registration",
-							"host": [
-								"localhost"
-							],
-							"port": "10480",
-							"path": [
-								"auth",
-								"registration"
-							]
-						}
-					},
-					"_postman_previewlanguage": null,
-					"header": null,
-					"cookie": [],
-					"body": null
-				},
-				{
-					"name": "Регистрация",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Админ\",\r\n    \"lastName\": \"Админ\",\r\n    \"email\": \"admin@mail.com\",\r\n    \"username\": \"admin\",\r\n    \"password\": \"12345\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:10480/auth/registration",
-							"host": [
-								"localhost"
-							],
-							"port": "10480",
-							"path": [
-								"auth",
-								"registration"
-							]
-						}
-					},
-					"_postman_previewlanguage": null,
-					"header": null,
-					"cookie": [],
-					"body": null
-				}
-			]
+			"response": []
 		},
 		{
 			"name": "Выдача роли \"Гид\"",
@@ -252,7 +158,7 @@
 					"basic": [
 						{
 							"key": "password",
-							"value": "12345",
+							"value": "{{password}}",
 							"type": "string"
 						},
 						{
@@ -263,7 +169,12 @@
 					]
 				},
 				"method": "PATCH",
-				"header": [],
+				"header": [
+					{
+						"key": "X-XSRF-TOKEN",
+						"value": "ckCpyaRJ0YpghSbKNBZkzv_DBa67bSicdElKBm6_h895tD2oRyab-ZMt6exNthOvAztQ9p7wKJeDXB2xRXt4Nw2GsvcY1Vic"
+					}
+				],
 				"url": {
 					"raw": "localhost:10480/users/guide_1/add-privilege",
 					"host": [
@@ -286,19 +197,24 @@
 					"type": "basic",
 					"basic": [
 						{
-							"key": "username",
-							"value": "guide_1",
+							"key": "password",
+							"value": "{{password}}",
 							"type": "string"
 						},
 						{
-							"key": "password",
-							"value": "12345",
+							"key": "username",
+							"value": "guide_1",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "X-XSRF-TOKEN",
+						"value": "ckCpyaRJ0YpghSbKNBZkzv_DBa67bSicdElKBm6_h895tD2oRyab-ZMt6exNthOvAztQ9p7wKJeDXB2xRXt4Nw2GsvcY1Vic"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n    \"name\": \"Обзорная экскурсия по Риму\",\r\n    \"minPrice\": \"2000\",\r\n    \"cityName\": \"Рим\",\r\n    \"cityCountryName\": \"Италия\"\r\n}",
@@ -309,7 +225,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:10480/users/guide_1/tours/1",
+					"raw": "localhost:10480/users/guide_1/tours",
 					"host": [
 						"localhost"
 					],
@@ -317,8 +233,7 @@
 					"path": [
 						"users",
 						"guide_1",
-						"tours",
-						"1"
+						"tours"
 					]
 				}
 			},
@@ -332,21 +247,26 @@
 					"basic": [
 						{
 							"key": "password",
-							"value": "12345",
+							"value": "{{password}}",
 							"type": "string"
 						},
 						{
 							"key": "username",
-							"value": "guide_1",
+							"value": "user_1",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "X-XSRF-TOKEN",
+						"value": "ckCpyaRJ0YpghSbKNBZkzv_DBa67bSicdElKBm6_h895tD2oRyab-ZMt6exNthOvAztQ9p7wKJeDXB2xRXt4Nw2GsvcY1Vic"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"tourDate\": \"2024-05-23\",\r\n    \"numberOfPeople\": 2,\r\n    \"description\": \"Описание\",\r\n    \"tourId\": 1,\r\n    \"guideUsername\": \"guide_1\"\r\n}",
+					"raw": "{\r\n    \"tourDate\": \"2024-07-30\",\r\n    \"numberOfPeople\": 2,\r\n    \"description\": \"Описание\",\r\n    \"tourId\": 2,\r\n    \"guideUsername\": \"guide_1\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -354,7 +274,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:10480/users/user_1/orders/1",
+					"raw": "localhost:10480/users/user_1/orders",
 					"host": [
 						"localhost"
 					],
@@ -362,8 +282,7 @@
 					"path": [
 						"users",
 						"user_1",
-						"orders",
-						"1"
+						"orders"
 					]
 				}
 			},
@@ -377,7 +296,7 @@
 					"basic": [
 						{
 							"key": "password",
-							"value": "12345",
+							"value": "{{password}}",
 							"type": "string"
 						},
 						{
@@ -417,7 +336,7 @@
 						},
 						{
 							"key": "password",
-							"value": "12345",
+							"value": "{{password}}",
 							"type": "string"
 						}
 					]
@@ -425,7 +344,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:10480/users/user_1/orders/10",
+					"raw": "localhost:10480/users/user_1/orders/1",
 					"host": [
 						"localhost"
 					],
@@ -434,7 +353,7 @@
 						"users",
 						"user_1",
 						"orders",
-						"10"
+						"1"
 					]
 				}
 			},
@@ -453,7 +372,7 @@
 						},
 						{
 							"key": "password",
-							"value": "12345",
+							"value": "{{password}}",
 							"type": "string"
 						}
 					]
@@ -488,7 +407,7 @@
 						},
 						{
 							"key": "password",
-							"value": "12345",
+							"value": "{{password}}",
 							"type": "string"
 						}
 					]
@@ -518,19 +437,24 @@
 					"type": "basic",
 					"basic": [
 						{
-							"key": "username",
-							"value": "guide_1",
+							"key": "password",
+							"value": "{{password}}",
 							"type": "string"
 						},
 						{
-							"key": "password",
-							"value": "12345",
+							"key": "username",
+							"value": "guide_1",
 							"type": "string"
 						}
 					]
 				},
 				"method": "PATCH",
-				"header": [],
+				"header": [
+					{
+						"key": "X-XSRF-TOKEN",
+						"value": "ckCpyaRJ0YpghSbKNBZkzv_DBa67bSicdElKBm6_h895tD2oRyab-ZMt6exNthOvAztQ9p7wKJeDXB2xRXt4Nw2GsvcY1Vic"
+					}
+				],
 				"url": {
 					"raw": "localhost:10480/users/guide_1/available-orders/1?accepted=true",
 					"host": [
@@ -548,6 +472,40 @@
 							"key": "accepted",
 							"value": "true"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Логин",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "user_1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:10480/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "10480",
+					"path": [
+						"auth",
+						"login"
 					]
 				}
 			},
@@ -577,20 +535,6 @@
 		}
 	],
 	"variable": [
-		{
-			"key": "user",
-			"value": "user_1"
-		},
-		{
-			"key": "admin",
-			"value": "admin",
-			"type": "string"
-		},
-		{
-			"key": "guide",
-			"value": "guide_1",
-			"type": "string"
-		},
 		{
 			"key": "password",
 			"value": "12345",
