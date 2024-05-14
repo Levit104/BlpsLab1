@@ -8,7 +8,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class MappingUtils {
+public class MappingHelper {
     private final ModelMapper modelMapper;
 
     public <S, D> D mapObject(S sourceObject, Class<D> destinationClass) {

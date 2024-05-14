@@ -5,7 +5,7 @@ import levit104.blss.labs.dto.OrderClientDTO;
 import levit104.blss.labs.dto.OrderCreationDTO;
 import levit104.blss.labs.models.main.Order;
 import levit104.blss.labs.services.OrderService;
-import levit104.blss.labs.utils.MappingUtils;
+import levit104.blss.labs.utils.MappingHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class OrderClientController {
-    private final MappingUtils mappingUtils;
+    private final MappingHelper mappingHelper;
     private final OrderService orderService;
 
     // Заказы клиента
@@ -31,7 +31,7 @@ public class OrderClientController {
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         List<Order> orders = orderService.getAllByClientUsername(username, pageable);
-        return mappingUtils.mapList(orders, OrderClientDTO.class);
+        return mappingHelper.mapList(orders, OrderClientDTO.class);
     }
 
     // Конкретный заказ клиента
@@ -39,7 +39,7 @@ public class OrderClientController {
     @GetMapping("/users/{username}/orders/{id}")
     public OrderClientDTO showOrderInfo(@PathVariable String username, @PathVariable Long id) {
         Order order = orderService.getByIdAndClientUsername(id, username);
-        return mappingUtils.mapObject(order, OrderClientDTO.class);
+        return mappingHelper.mapObject(order, OrderClientDTO.class);
     }
 
     // Создать заказ
@@ -51,8 +51,8 @@ public class OrderClientController {
             @RequestBody @Valid OrderCreationDTO requestDTO,
             BindingResult bindingResult
     ) {
-        Order order = mappingUtils.mapObject(requestDTO, Order.class);
+        Order order = mappingHelper.mapObject(requestDTO, Order.class);
         orderService.createOrder(order, username, bindingResult);
-        return mappingUtils.mapObject(order, OrderClientDTO.class);
+        return mappingHelper.mapObject(order, OrderClientDTO.class);
     }
 }

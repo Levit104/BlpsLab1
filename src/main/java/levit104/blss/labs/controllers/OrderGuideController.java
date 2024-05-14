@@ -3,7 +3,7 @@ package levit104.blss.labs.controllers;
 import levit104.blss.labs.dto.OrderGuideDTO;
 import levit104.blss.labs.models.main.Order;
 import levit104.blss.labs.services.OrderService;
-import levit104.blss.labs.utils.MappingUtils;
+import levit104.blss.labs.utils.MappingHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class OrderGuideController {
-    private final MappingUtils mappingUtils;
+    private final MappingHelper mappingHelper;
     private final OrderService orderService;
 
     // Заказы для гида
@@ -27,7 +27,7 @@ public class OrderGuideController {
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         List<Order> orders = orderService.getAllByGuideUsername(username, pageable);
-        return mappingUtils.mapList(orders, OrderGuideDTO.class);
+        return mappingHelper.mapList(orders, OrderGuideDTO.class);
     }
 
     // Конкретный заказ для гида
@@ -35,7 +35,7 @@ public class OrderGuideController {
     @GetMapping("/users/{username}/available-orders/{id}")
     public OrderGuideDTO showAvailableOrderInfo(@PathVariable String username, @PathVariable Long id) {
         Order order = orderService.getByIdAndGuideUsername(id, username);
-        return mappingUtils.mapObject(order, OrderGuideDTO.class);
+        return mappingHelper.mapObject(order, OrderGuideDTO.class);
     }
 
     // Принять или отклонить заказ

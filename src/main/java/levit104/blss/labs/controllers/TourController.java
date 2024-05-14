@@ -8,7 +8,7 @@ import levit104.blss.labs.models.main.Tour;
 import levit104.blss.labs.models.main.User;
 import levit104.blss.labs.services.TourService;
 import levit104.blss.labs.services.UserService;
-import levit104.blss.labs.utils.MappingUtils;
+import levit104.blss.labs.utils.MappingHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class TourController {
-    private final MappingUtils mappingUtils;
+    private final MappingHelper mappingHelper;
     private final UserService userService;
     private final TourService tourService;
 
@@ -35,7 +35,7 @@ public class TourController {
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         List<Tour> tours = tourService.getAllByCityNameAndCountryName(city, country, pageable);
-        return mappingUtils.mapList(tours, TourDTO.class);
+        return mappingHelper.mapList(tours, TourDTO.class);
     }
 
     // Гиды в городе
@@ -46,7 +46,7 @@ public class TourController {
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         List<User> guides = userService.getAllByCityNameAndCountryName(city, country, pageable);
-        return mappingUtils.mapList(guides, UserDTO.class);
+        return mappingHelper.mapList(guides, UserDTO.class);
     }
 
     // Экскурсии гида
@@ -56,14 +56,14 @@ public class TourController {
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         List<Tour> tours = tourService.getAllByGuideUsername(username, pageable);
-        return mappingUtils.mapList(tours, TourDTO.class);
+        return mappingHelper.mapList(tours, TourDTO.class);
     }
 
     // Конкретная экскурсия гида
     @GetMapping("/users/{username}/tours/{id}")
     public TourDTO showGuideTourInfo(@PathVariable String username, @PathVariable Long id) {
         Tour tour = tourService.getByIdAndGuideUsername(id, username);
-        return mappingUtils.mapObject(tour, TourDTO.class);
+        return mappingHelper.mapObject(tour, TourDTO.class);
     }
 
     // Добавить экскурсию
@@ -75,8 +75,8 @@ public class TourController {
             @RequestBody @Valid TourCreationDTO requestDTO,
             BindingResult bindingResult
     ) {
-        Tour tour = mappingUtils.mapObject(requestDTO, Tour.class);
+        Tour tour = mappingHelper.mapObject(requestDTO, Tour.class);
         tourService.add(tour, username, bindingResult);
-        return mappingUtils.mapObject(tour, TourDTO.class);
+        return mappingHelper.mapObject(tour, TourDTO.class);
     }
 }
