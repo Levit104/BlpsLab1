@@ -13,8 +13,8 @@ public class OrderCreationDTO {
     private LocalDate tourDate;
 
     @NotNull(message = ValidationUtils.BLANK_FIELD)
-    @Min(value = 1, message = ValidationUtils.INVALID_NUMBER)
-    @Max(value = 25, message = ValidationUtils.INVALID_NUMBER)
+    @Min(value = 1, message = ValidationUtils.INVALID_NUMBER_OF_PEOPLE)
+    @Max(value = 25, message = ValidationUtils.INVALID_NUMBER_OF_PEOPLE)
     private Integer numberOfPeople;
 
     private String description; // может быть null
@@ -23,5 +23,6 @@ public class OrderCreationDTO {
     private Long tourId;
 
     @NotBlank(message = ValidationUtils.BLANK_FIELD)
+    @Size(min = 2, max = 32, message = ValidationUtils.INVALID_STRING_SIZE)
     private String guideUsername;
 }

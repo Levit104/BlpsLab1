@@ -70,11 +70,13 @@ public class OrderService {
         if (Objects.equals(client, guide))
             throw new InvalidDataException("Клиент и Гид - один и тот же пользователь");
 
-        if (getAllByClientUsername(clientUsername, Pageable.unpaged()).stream().anyMatch(clientOrder ->
-                Objects.equals(clientOrder.getTour(), tour) &&
+        if (orderRepository.findAllByClient_Username(clientUsername, Pageable.unpaged())
+                .stream().anyMatch(clientOrder ->
+                        Objects.equals(clientOrder.getTour(), tour) &&
                         Objects.equals(clientOrder.getGuide(), guide) &&
                         clientOrder.getTourDate().isEqual(order.getTourDate())
-        )) {
+                )
+        ) {
             throw new InvalidDataException("Заказ на данную экскурсию уже создан");
         }
 

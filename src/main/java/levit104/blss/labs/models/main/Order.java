@@ -2,11 +2,13 @@ package levit104.blss.labs.models.main;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Check;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "orders")
+@Check(constraints = "number_of_people >= 1 and number_of_people <= 25")
 @Data
 public class Order {
     @Id
