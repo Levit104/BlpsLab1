@@ -24,6 +24,8 @@ spring:
                         url: jdbc:postgresql://localhost:5432/stupid_db
                         user: postgres
                         password: qwerty123
+            properties:
+                log-base-dir: ./atomikos-logs
     jpa:
         properties:
             hibernate:

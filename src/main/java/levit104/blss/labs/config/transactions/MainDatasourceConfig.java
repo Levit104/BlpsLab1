@@ -15,8 +15,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableJpaRepositories(
         basePackages = "levit104.blss.labs.repos.main",
-        entityManagerFactoryRef = "mainEntityManagerFactory",
-        transactionManagerRef = "jtaTransactionManager"
+        entityManagerFactoryRef = "mainEntityManagerFactory"
 )
 public class MainDatasourceConfig {
 
