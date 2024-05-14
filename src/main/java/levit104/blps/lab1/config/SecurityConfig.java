@@ -23,7 +23,7 @@ public class SecurityConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers("/auth/registration")
                 )
-//                .csrf(AbstractHttpConfigurer::disable)
+//                .csrf(configurer -> configurer.disable())
         ;
 
         return http.build();
