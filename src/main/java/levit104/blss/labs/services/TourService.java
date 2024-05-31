@@ -1,6 +1,7 @@
 package levit104.blss.labs.services;
 
 import levit104.blss.labs.exceptions.EntityNotFoundException;
+import levit104.blss.labs.exceptions.InvalidDataException;
 import levit104.blss.labs.models.primary.City;
 import levit104.blss.labs.models.primary.Tour;
 import levit104.blss.labs.models.primary.User;
@@ -24,13 +25,13 @@ public class TourService {
     private final NotificationService notificationService;
 
     public Tour getByIdAndGuideUsername(Long id, String guideUsername) {
-        return tourRepository.findByIdAndGuide_Username(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
+        return tourRepository.findByIdAndGuide_UsernameAndApprovedIsTrue(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
                 "Экскурсия №%d у '%s' не найдена".formatted(id, guideUsername)
         ));
     }
 
     public List<Tour> getAllByGuideUsername(String guideUsername, Pageable pageable) {
-        List<Tour> tours = tourRepository.findAllByGuide_Username(guideUsername, pageable);
+        List<Tour> tours = tourRepository.findAllByGuide_UsernameAndApprovedIsTrue(guideUsername, pageable);
 
         if (tours.isEmpty())
             throw new EntityNotFoundException("Экскурсии у '%s' не найдены".formatted(guideUsername));
@@ -39,7 +40,7 @@ public class TourService {
     }
 
     public List<Tour> getAllByCityNameAndCountryName(String cityName, String countryName, Pageable pageable) {
-        List<Tour> tours = tourRepository.findAllByCity_NameAndCity_Country_Name(cityName, countryName, pageable);
+        List<Tour> tours = tourRepository.findAllByCity_NameAndCity_Country_NameAndApprovedIsTrue(cityName, countryName, pageable);
 
         if (tours.isEmpty())
             throw new EntityNotFoundException("Экскурсии в городе '%s' в стране '%s' не найдены"
@@ -58,7 +59,24 @@ public class TourService {
         tour.setGuide(guide);
         tourRepository.save(tour);
 
-        notificationService.createNotification("Экскурсия %d создана".formatted(tour.getId()), guideUsername);
+        notificationService.createNotification("Экскурсия %d создана".formatted(tour.getId()), "admin");
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public String changeApprovalStatus(Long id, String guideUsername, boolean approved) {
+        Tour tour = tourRepository.findByIdAndGuide_Username(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
+                "Экскурсия №%d у '%s' не найдена".formatted(id, guideUsername)
+        ));
+
+        if (tour.getApproved() != null) {
+            throw new InvalidDataException("Экскурсия уже была рассмотрена");
+        }
+
+        tour.setApproved(approved);
+
+        String message = approved ? "Экскурсия %d одобрена".formatted(id) : "Экскурсия %d отклонена".formatted(id);
+        notificationService.createNotification(message, guideUsername);
+        return message;
     }
 
     private void validateTour(Tour tour, BindingResult bindingResult) {

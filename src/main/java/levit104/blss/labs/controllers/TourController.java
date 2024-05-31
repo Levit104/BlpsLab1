@@ -79,4 +79,10 @@ public class TourController {
         tourService.add(tour, username, bindingResult);
         return mappingHelper.mapObject(tour, TourDTO.class);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/users/{username}/tours/{id}")
+    public String considerTour(@PathVariable String username, @PathVariable Long id, @RequestParam boolean approved) {
+        return tourService.changeApprovalStatus(id, username, approved);
+    }
 }

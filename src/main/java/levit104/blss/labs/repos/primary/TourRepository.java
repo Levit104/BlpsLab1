@@ -15,6 +15,15 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
 
     @Query(
             "select t from Tour t " +
+                    "left join fetch t.city ci " +
+                    "left join fetch ci.country co " +
+                    "left join fetch t.guide g " +
+                    "where t.id = ?1 and g.username = ?2 and t.approved"
+    )
+    Optional<Tour> findByIdAndGuide_UsernameAndApprovedIsTrue(Long id, String guideUsername);
+
+    @Query(
+            "select t from Tour t " +
             "left join fetch t.city ci " +
             "left join fetch ci.country co " +
             "left join fetch t.guide g " +
@@ -27,16 +36,16 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
             "left join fetch t.city ci " +
             "left join fetch ci.country co " +
             "left join fetch t.guide g " +
-            "where g.username = ?1"
+            "where g.username = ?1 and t.approved"
     )
-    List<Tour> findAllByGuide_Username(String guideUsername, Pageable pageable);
+    List<Tour> findAllByGuide_UsernameAndApprovedIsTrue(String guideUsername, Pageable pageable);
 
     @Query(
             "select t from Tour t " +
             "left join fetch t.city ci " +
             "left join fetch ci.country co " +
             "left join fetch t.guide g " +
-            "where ci.name = ?1 and co.name = ?2"
+            "where ci.name = ?1 and co.name = ?2 and t.approved"
     )
-    List<Tour> findAllByCity_NameAndCity_Country_Name(String cityName, String countryName, Pageable pageable);
+    List<Tour> findAllByCity_NameAndCity_Country_NameAndApprovedIsTrue(String cityName, String countryName, Pageable pageable);
 }

@@ -32,4 +32,6 @@ public class Tour {
 
     @OneToMany(mappedBy = "tour")
     private List<Order> orders;
+
+    private Boolean approved;
 }

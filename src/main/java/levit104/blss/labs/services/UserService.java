@@ -65,7 +65,7 @@ public class UserService implements UserDetailsService {
         user.setRoles(List.of(roleService.getByName("ROLE_USER")));
         userRepository.save(user);
 
-        notificationService.createNotification("Пользователь %d зарегистрирован".formatted(user.getId()), user.getUsername());
+        notificationService.createNotification("Пользователь %d зарегистрирован".formatted(user.getId()), "admin");
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -80,8 +80,8 @@ public class UserService implements UserDetailsService {
         user.getRoles().add(role);
         userRepository.save(user);
 
-        String message = "Роль '%s' успешно выдана".formatted(roleName);
-        notificationService.createNotification(message, "admin");
+        String message = "Роль 'Гид' успешно выдана";
+        notificationService.createNotification(message, username);
         return message;
     }
 

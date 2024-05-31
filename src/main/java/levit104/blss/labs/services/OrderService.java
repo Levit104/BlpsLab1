@@ -87,7 +87,7 @@ public class OrderService {
         order.setOrderDate(LocalDate.now());
         orderRepository.save(order);
 
-        notificationService.createNotification("Заказ %d создан".formatted(order.getId()), clientUsername);
+        notificationService.createNotification("Заказ %d создан".formatted(order.getId()), guide.getUsername());
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -103,7 +103,7 @@ public class OrderService {
         orderRepository.save(order);
 
         String message = "Статус заказа изменён на '%s'".formatted(statusName);
-        notificationService.createNotification(message, guideUsername);
+        notificationService.createNotification(message, order.getClient().getUsername());
         return message;
     }
 }
