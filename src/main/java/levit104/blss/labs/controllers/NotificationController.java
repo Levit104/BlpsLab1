@@ -2,7 +2,7 @@ package levit104.blss.labs.controllers;
 
 import levit104.blss.labs.dto.NotificationDTO;
 import levit104.blss.labs.models.secondary.Notification;
-import levit104.blss.labs.services.NotificationService;
+import levit104.blss.labs.services.NotificationConsumerService;
 import levit104.blss.labs.utils.MappingHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class NotificationController {
-    private final NotificationService notificationService;
+    private final NotificationConsumerService notificationService;
     private final MappingHelper mappingHelper;
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN') && principal.username == #username")

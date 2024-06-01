@@ -26,7 +26,7 @@ public class OrderService {
     private final OrderStatusService orderStatusService;
     private final UserService userService;
     private final TourService tourService;
-    private final NotificationService notificationService;
+    private final NotificationProducerService producer;
 
     public Order getByIdAndClientUsername(Long id, String clientUsername) {
         return orderRepository.findByIdAndClient_Username(id, clientUsername).orElseThrow(() -> new EntityNotFoundException(
@@ -87,7 +87,9 @@ public class OrderService {
         order.setOrderDate(LocalDate.now());
         orderRepository.save(order);
 
-        notificationService.createNotification("Заказ %d создан".formatted(order.getId()), guide.getUsername());
+        String message = "Заказ %d создан".formatted(order.getId());
+        List<String> usernames = List.of(guide.getUsername());
+        producer.send(message, usernames);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -103,7 +105,8 @@ public class OrderService {
         orderRepository.save(order);
 
         String message = "Статус заказа изменён на '%s'".formatted(statusName);
-        notificationService.createNotification(message, order.getClient().getUsername());
+        List<String> usernames = List.of(order.getClient().getUsername());
+        producer.send(message, usernames);
         return message;
     }
 }

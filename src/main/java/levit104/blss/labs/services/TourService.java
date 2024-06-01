@@ -22,7 +22,7 @@ public class TourService {
     private final TourRepository tourRepository;
     private final CityService cityService;
     private final UserService userService;
-    private final NotificationService notificationService;
+    private final NotificationProducerService producer;
 
     public Tour getByIdAndGuideUsername(Long id, String guideUsername) {
         return tourRepository.findByIdAndGuide_UsernameAndApprovedIsTrue(id, guideUsername).orElseThrow(() -> new EntityNotFoundException(
@@ -59,7 +59,9 @@ public class TourService {
         tour.setGuide(guide);
         tourRepository.save(tour);
 
-        notificationService.createNotification("Экскурсия %d создана".formatted(tour.getId()), "admin");
+        String message = "Экскурсия %d создана".formatted(tour.getId());
+        List<String> usernames = userService.getAllByRoleName("ROLE_ADMIN").stream().map(User::getUsername).toList();
+        producer.send(message, usernames);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -75,7 +77,8 @@ public class TourService {
         tour.setApproved(approved);
 
         String message = approved ? "Экскурсия %d одобрена".formatted(id) : "Экскурсия %d отклонена".formatted(id);
-        notificationService.createNotification(message, guideUsername);
+        List<String> usernames = List.of(guideUsername);
+        producer.send(message, usernames);
         return message;
     }
 

@@ -26,7 +26,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
-    private final NotificationService notificationService;
+    private final NotificationProducerService producer;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -57,6 +57,10 @@ public class UserService implements UserDetailsService {
         return guides;
     }
 
+    public List<User> getAllByRoleName(String roleName) {
+        return userRepository.findAllByRoles_Name(roleName);
+    }
+
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void registerUser(User user, BindingResult bindingResult) {
         validateUser(user, bindingResult);
@@ -65,7 +69,9 @@ public class UserService implements UserDetailsService {
         user.setRoles(List.of(roleService.getByName("ROLE_USER")));
         userRepository.save(user);
 
-        notificationService.createNotification("Пользователь %d зарегистрирован".formatted(user.getId()), "admin");
+        String message = "Пользователь %d зарегистрирован".formatted(user.getId());
+        List<String> usernames = getAllByRoleName("ROLE_ADMIN").stream().map(User::getUsername).toList();
+        producer.send(message, usernames);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -81,7 +87,8 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
         String message = "Роль 'Гид' успешно выдана";
-        notificationService.createNotification(message, username);
+        List<String> usernames = List.of(username);
+        producer.send(message, usernames);
         return message;
     }
 
