@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -34,4 +35,7 @@ public class Tour {
     private List<Order> orders;
 
     private Boolean approved;
+
+    @Column(nullable = false)
+    private LocalDate creationDate;
 }

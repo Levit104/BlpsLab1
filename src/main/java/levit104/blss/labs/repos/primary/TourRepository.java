@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,4 +49,13 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
             "where ci.name = ?1 and co.name = ?2 and t.approved"
     )
     List<Tour> findAllByCity_NameAndCity_Country_NameAndApprovedIsTrue(String cityName, String countryName, Pageable pageable);
+
+    @Query(
+            "select t from Tour t " +
+            "left join fetch t.city ci " +
+            "left join fetch ci.country co " +
+            "left join fetch t.guide g " +
+            "where not t.approved and t.creationDate < ?1"
+    )
+    List<Tour> findAllByApprovedFalseAndCreationDateBefore(LocalDate creationDate);
 }

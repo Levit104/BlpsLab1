@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -57,6 +58,7 @@ public class TourService {
         User guide = userService.getByUsername(guideUsername);
         tour.setCity(city);
         tour.setGuide(guide);
+        tour.setCreationDate(LocalDate.now());
         tourRepository.save(tour);
 
         String message = "Экскурсия %d создана".formatted(tour.getId());
@@ -80,6 +82,13 @@ public class TourService {
         List<String> usernames = List.of(guideUsername);
         producer.send(message, usernames);
         return message;
+    }
+
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public List<Tour> deleteAllDisapprovedWithCreationDateBefore(LocalDate date) {
+        List<Tour> tours = tourRepository.findAllByApprovedFalseAndCreationDateBefore(date);
+        tourRepository.deleteAll(tours);
+        return tours;
     }
 
     private void validateTour(Tour tour, BindingResult bindingResult) {
