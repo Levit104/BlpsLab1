@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,20 +24,25 @@ public class NotificationConsumerService {
     }
 
     @KafkaListener(topics = "notifications")
-    public void receiveClientNotification(NotificationContainer notification) {
+    @Transactional
+    public void receiveNotification(NotificationContainer notification) {
         log.info("Получено сообщение для {}: {}", notification.getUsernames(), notification.getMessage());
         handleNotification(notification);
     }
 
     private void handleNotification(NotificationContainer notification) {
-        notification.getUsernames().forEach(username -> createNotification(notification.getMessage(), username));
+        List<Notification> notifications = notification.getUsernames()
+                .stream()
+                .map(username -> createNotification(notification.getMessage(), username))
+                .toList();
+        notificationRepository.saveAll(notifications);
     }
 
-    private void createNotification(String message, String username) {
+    private Notification createNotification(String message, String username) {
         Notification notification = new Notification();
         notification.setMessage(message);
         notification.setUsername(username);
         notification.setTime(LocalDateTime.now());
-        notificationRepository.save(notification);
+        return notification;
     }
 }

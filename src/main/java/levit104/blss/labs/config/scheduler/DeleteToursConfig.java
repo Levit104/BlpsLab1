@@ -21,7 +21,7 @@ public class DeleteToursConfig {
         return TriggerBuilder.newTrigger()
                 .forJob("delete-tours-job")
                 .withIdentity("delete-tours-trigger")
-                .withSchedule(CronScheduleBuilder.cronSchedule("0 0 0 * * ?"))
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 0 * * * ?"))
                 .build();
     }
 }
